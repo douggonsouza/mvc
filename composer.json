@@ -1,0 +1,19 @@
+{
+    "name": "douggonsouza/mvc",
+    "description": "Processo de resposta tipo Model, View e Control",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "douggonsouza\\mvc\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Douglas Gonçalves de Souza",
+            "email": "douggonsouza@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
