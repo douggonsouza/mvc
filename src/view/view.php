@@ -3,35 +3,46 @@
 namespace douggonsouza\mvc\view;
 
 use douggonsouza\mvc\view\display;
+use douggonsouza\propertys\propertysInterface;
 
 class view extends display
 {
-    private   $params = array();
+    protected $layout   = null;
     protected $template = null;
     protected $file     = null;
-    protected $heartwoodResponses;
-    protected $layout;
-    protected $local;
-    protected $assets;
+    protected $params   = null;
 
-	/**
-	 * Requisita carregamento do template com endereço completo
-	 * @param unknown $my
-	 */
-    final public function view($params = null)
+    /**
+    * Carrega o layout da requisição
+    *
+    * @param string $layout
+    * @param propertysInterface|null $params
+    * 
+    * @return void
+    * 
+    */
+    final public function layout(string $layout, propertysInterface $params = null)
     {
         $this->setParams($params);
+        $this->setLayout($params);
         parent::body(
             $this->getLayout(),
             $this->getParams()
         );
+
+        return;
     }
-    
+
     /**
-	 * Requisita o carregamento do template
-	 * @param unknown $my
-	 */
-    public function content(array $params = null)
+     * Carrega o template parcial da requisição
+     *
+    * @param string $layout
+    * @param propertysInterface|null $params
+    * 
+    * @return void
+     * 
+     */
+    public function template(string $layout, propertysInterface $params = null)
     {
         $this->setParams($params);                   
         parent::body(
@@ -63,33 +74,6 @@ class view extends display
         $this->setTemplate($localRequest);                   
         exit(parent::render($this->getTemplate()));
     }
-    
-    /**
-     * 
-     */
-    private function existExtensionTemplate($filename)
-    {
-        if(strpos($filename,'.phtml') === false)
-            return $filename.'.phtml';
-        return $filename;
-    }
-
-    /**
-     * Seta um valor de par�metro
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @return bool
-     */
-    public function param(string $name, $value)
-    {
-        if(!isset($name)){
-            return false;
-        }
-        
-        $this->params[$name] = $value;
-        return true;
-    }
 
     /**
      * Get the value of template
@@ -108,27 +92,6 @@ class view extends display
     {
         if(isset($template) && !empty($template))
             $this->template = $this->existExtensionTemplate($template);
-        return $this;
-    }
-
-    /**
-     * Get the value of params
-     */ 
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * Set the value of params
-     *
-     * @return  self
-     */ 
-    public function setParams($params)
-    {
-        if(isset($params) && !empty($params)){
-            $this->params = array_merge($this->params,$params);
-        }
         return $this;
     }
 
@@ -154,165 +117,6 @@ class view extends display
     }
 
     /**
-     * Get the value of heartwoodModel
-     */ 
-    public static function getHeartwoodModel()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/models';
-    }
-
-    /**
-     * Get the value of heartwoodAssets
-     */ 
-    public static function getHeartwoodAssets()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/assets';
-    }
-
-    /**
-     * Get the value of heartwoodAssets
-     */ 
-    public static function getUrlHeartwoodAssets()
-    {
-        return strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'.$_SERVER['HTTP_HOST'].'/src/common/assets';
-    }
-
-    /**
-     * Get the value of heartwoodManagments
-     */ 
-    public static function getHeartwoodManagments()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/managments';
-    }
-
-    /**
-     * Get the value of heartwoodLayouts
-     */ 
-    public static function getHeartwoodLayouts()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/layouts';
-    }
-
-    /**
-     * Get the value of heartwoodDefaultLayout
-     */ 
-    public static function getHeartwoodDefaultLayout()
-    {
-        return self::getHeartwoodLayouts().'/default.phtml';
-    }
-
-    /**
-     * Get the value of heartwoodResponses
-     */ 
-    public function getHeartwoodResponses()
-    {
-        return $this->heartwoodResponses;
-    }
-
-    /**
-     * Set the value of heartwoodResponses
-     *
-     * @return  self
-     */ 
-    public function setHeartwoodResponses($heartwoodResponses)
-    {
-        if(isset($heartwoodResponses) && !empty($heartwoodResponses)){
-            $this->heartwoodResponses = $heartwoodResponses;
-        }
-        return $this;
-    }
-
-    /**
-     * Get the value of heartwoodModel
-     */ 
-    public static function getBaseModel()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/models';
-    }
-
-    /**
-     * Get the value of heartwoodAssets
-     */ 
-    public static function getBaseAssets()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/assets';
-    }
-
-    /**
-     * Get the value of heartwoodAssets
-     */ 
-    public static function getBaseUrlAssets()
-    {
-        return strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'.$_SERVER['HTTP_HOST'].'/src/common/assets';
-    }
-
-    /**
-     * Get the value of heartwoodManagments
-     */ 
-    public static function getBaseManagments()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/managments';
-    }
-
-    /**
-     * Get the value of heartwoodLayouts
-     */ 
-    public static function getBaseLayouts()
-    {
-        return $_SERVER['DOCUMENT_ROOT'].'/src/common/layouts';
-    }
-
-    /**
-     * Get the value of heartwoodDefaultLayout
-     */ 
-    public static function getBaseDefaultLayout()
-    {
-        return self::getHeartwoodLayouts().'/default.phtml';
-    }
-
-    /**
-     * Get the value of heartwoodResponses
-     */ 
-    public function getBasedResponses()
-    {
-        return $this->heartwoodResponses;
-    }
-
-    /**
-     * Set the value of heartwoodResponses
-     *
-     * @return  self
-     */ 
-    public function setBaseResponses($heartwoodResponses)
-    {
-        if(isset($heartwoodResponses) && !empty($heartwoodResponses)){
-            $this->heartwoodResponses = $heartwoodResponses;
-        }
-        return $this;
-    }
-
-    /**
-     * Get the value of assets
-     */ 
-    public function getAssets()
-    {
-        return $this->assets;
-    }
-
-    /**
-     * Set the value of assets
-     *
-     * @return  self
-     */ 
-    public function setAssets($assets)
-    {
-        if(isset($assets) && !empty($assets)){
-            $this->assets = $assets;
-        }
-        return $this;
-    }
-
-    /**
      * Get the value of file
      */ 
     public function getFile()
@@ -330,6 +134,28 @@ class view extends display
         if(isset($file) && !empty($file)){
         $this->file = $file;
         }
+        return $this;
+    }
+
+    /**
+     * Get the value of params
+     */ 
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Set the value of params
+     *
+     * @return  self
+     */ 
+    public function setParams($params)
+    {
+        if(isset($params) && !empty($params)){
+            $this->params = $params;
+        }
+
         return $this;
     }
 }        

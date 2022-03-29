@@ -1,11 +1,11 @@
 {
-    "name": "douggonsouza/mvc",
-    "description": "Processo de resposta tipo Model, View e Control",
+    "name": "douggonsouza/propertys",
+    "description": "Armazenagem das propriedades",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "douggonsouza\\mvc\\": "src/"
+            "douggonsouza\\propertys\\": "src/"
         }
     },
     "authors": [
@@ -15,7 +15,5 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "douggonsouza/propertys": "dev-main"
-    }
+    "require": {}
 }

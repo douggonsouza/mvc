@@ -1,0 +1,47 @@
+{
+    "packages": [
+        {
+            "name": "douggonsouza/propertys",
+            "version": "dev-main",
+            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/douggonsouza/propertys.git",
+                "reference": "0e04490ef814f83f4e784e0c697970a8daba83a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/douggonsouza/propertys/zipball/0e04490ef814f83f4e784e0c697970a8daba83a6",
+                "reference": "0e04490ef814f83f4e784e0c697970a8daba83a6",
+                "shasum": ""
+            },
+            "time": "2022-03-26T15:18:48+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "douggonsouza\\propertys\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Douglas Gonçalves de Souza",
+                    "email": "douggonsouza@gmail.com"
+                }
+            ],
+            "description": "Armazenagem das propriedades",
+            "support": {
+                "issues": "https://github.com/douggonsouza/propertys/issues",
+                "source": "https://github.com/douggonsouza/propertys/tree/v1.0.0"
+            },
+            "install-path": "../douggonsouza/propertys"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

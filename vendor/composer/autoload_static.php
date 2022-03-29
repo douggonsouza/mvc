@@ -7,14 +7,19 @@ namespace Composer\Autoload;
 class ComposerStaticInit80e6afd09195ba30855030970ddea808
 {
     public static $prefixLengthsPsr4 = array (
-        'D' => 
+        'd' => 
         array (
-            'Douggonsouza\\Mvc\\' => 17,
+            'douggonsouza\\propertys\\' => 23,
+            'douggonsouza\\mvc\\' => 17,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Douggonsouza\\Mvc\\' => 
+        'douggonsouza\\propertys\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/douggonsouza/propertys/src',
+        ),
+        'douggonsouza\\mvc\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -22,6 +27,26 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'douggonsouza\\mvc\\control\\act' => __DIR__ . '/../..' . '/src/control/act.php',
+        'douggonsouza\\mvc\\control\\actInterface' => __DIR__ . '/../..' . '/src/control/actInterface.php',
+        'douggonsouza\\mvc\\control\\exiting' => __DIR__ . '/../..' . '/src/control/exiting.php',
+        'douggonsouza\\mvc\\model\\connection\\conn' => __DIR__ . '/../..' . '/src/model/connection/conn.php',
+        'douggonsouza\\mvc\\model\\model' => __DIR__ . '/../..' . '/src/model/model.php',
+        'douggonsouza\\mvc\\model\\modelInterface' => __DIR__ . '/../..' . '/src/model/modelInterface.php',
+        'douggonsouza\\mvc\\model\\resource\\resource' => __DIR__ . '/../..' . '/src/model/resource/resource.php',
+        'douggonsouza\\mvc\\model\\resource\\resourceInterface' => __DIR__ . '/../..' . '/src/model/resource/resourceInterface.php',
+        'douggonsouza\\mvc\\model\\utils' => __DIR__ . '/../..' . '/src/model/utils.php',
+        'douggonsouza\\mvc\\model\\validate\\isdatetime' => __DIR__ . '/../..' . '/src/model/validate/isdatetime.php',
+        'douggonsouza\\mvc\\model\\validate\\isemail' => __DIR__ . '/../..' . '/src/model/validate/isemail.php',
+        'douggonsouza\\mvc\\model\\validate\\isnumber' => __DIR__ . '/../..' . '/src/model/validate/isnumber.php',
+        'douggonsouza\\mvc\\model\\validate\\isstring' => __DIR__ . '/../..' . '/src/model/validate/isstring.php',
+        'douggonsouza\\mvc\\model\\validate\\limit' => __DIR__ . '/../..' . '/src/model/validate/limit.php',
+        'douggonsouza\\mvc\\model\\validate\\notnull' => __DIR__ . '/../..' . '/src/model/validate/notnull.php',
+        'douggonsouza\\mvc\\view\\display' => __DIR__ . '/../..' . '/src/view/display.php',
+        'douggonsouza\\mvc\\view\\mimes' => __DIR__ . '/../..' . '/src/view/mimes.php',
+        'douggonsouza\\mvc\\view\\view' => __DIR__ . '/../..' . '/src/view/view.php',
+        'douggonsouza\\propertys\\propertys' => __DIR__ . '/..' . '/douggonsouza/propertys/src/propertys.php',
+        'douggonsouza\\propertys\\propertysInterface' => __DIR__ . '/..' . '/douggonsouza/propertys/src/propertysInterface.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
