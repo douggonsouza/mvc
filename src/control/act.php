@@ -5,26 +5,17 @@ namespace douggonsouza\mvc\control;
 use douggonsouza\mvc\control\exiting;
 use douggonsouza\routes\router;
 use douggonsouza\propertys\propertysInterface;
+use douggonsouza\mvc\control\actInterface;
 
-abstract class act extends exiting
+abstract class act extends exiting implements actInterface
 {
-    protected $dir;
-    protected $namespace;
-    protected $url;
-
     /**
      * Função a ser executada no contexto da action
      *
      * @param array $info
      * @return void
      */
-    abstract public function main(propertysInterface $info);
-
-    /**
-     * Para ser disparado antes
-     *
-     * @return void
-     */
+    abstract public function main(propertysInterface $infos);
 
     /**
      * Antecede a ação de resposta

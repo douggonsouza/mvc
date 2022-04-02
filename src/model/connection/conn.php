@@ -27,7 +27,10 @@ abstract class conn
 				$login,
 				$password,
 				$schema
-			) or die('Error connection database.');
+			);
+			if (mysqli_connect_errno()) {
+				exit(sprintf("Connect failed: %s\n", mysqli_connect_error()));
+			}
 		}
 		return self::$connection;
     }

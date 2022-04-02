@@ -3,85 +3,46 @@
 namespace douggonsouza\mvc\view;
 
 use douggonsouza\mvc\view\mimes;
+use douggonsouza\propertys\propertysInterface;
 
-class display{
-
-    protected $label = null;
-	
-	/**
-	 * Responde com o conteúdo do arquivo
-	 * @param string $local
-	 */
-    final function body($local, $params = null)
+class display
+{
+    /**
+     * Responde com a inclusão do arquivo
+     * 
+     * @param string    $local
+     * @param object    $param
+     * 
+     * @return bool|int
+     */
+    final function body(string $local, propertysInterface $params = null)
     {
         if(!file_exists($local)){
-            return '';
+            return 500;
         }
 
         if(isset($params) && !empty($params)){
-            foreach($params as $key => $vle){
-                $$key = $vle;
-            }                        
-        }
-        
-        // label
-        $this->label();
+            $params = $params;
+        }           
 
         return include($local);
 
 	}
-
-    /**
-     * Undocumented function
-     *
-     * @param string $class
-     * @return void
-     */
-    public function label(){
-        if(!empty($this->getLabel())){
-            print("\n<!-- action: ".$this->getLabel()." -->\n");
-        }
-        
-    }
                
     /**
 	 * Responde com o conteúdo do arquivo
+     * 
 	 * @param string $local
+     * 
+     * @return string|int
 	 */
-    final function output($local)
+    final function output(string $local)
     {
-        if(file_exists($local))
+        if(file_exists($local)){
             return file_get_contents($local);
-        return '';
-    }
-    
-    /**
-     * Renderiza arquivo de saída
-     *
-     * @param string $localRequest
-     * @return object
-     */
-    final function render(string $localRequest)
-    {
-        if(!isset($localRequest))
-            throw new \Exception('Not found object request.');
-		$local = str_replace(
-			array('/','//','\\','\\\\'),
-			'/',
-			DIR_ROOT.'/'.$localRequest);
-        if(!file_exists($local)){
-            header("HTTP/1.0 404 Not Found");
-            exit;
         }
-            
-        $this->headered(
-            str_replace(basename($local), '', $local),
-            basename($local),
-            true,
-            true
-        );
 
-        return readfile($local);
+        return 500;
     }
 
     /**
@@ -135,26 +96,5 @@ class display{
         if($download)
             header('Content-Disposition: attachment; filename="'.$filename.$ext.'"');
     }
-
-    /**
-     * Get the value of label
-     */ 
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * Set the value of label
-     *
-     * @return  self
-     */ 
-    protected function setLabel($label)
-    {
-        $this->label = $label;
-
-        return $this;
-    }
 }
-
 ?>

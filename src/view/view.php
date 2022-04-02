@@ -7,10 +7,9 @@ use douggonsouza\propertys\propertysInterface;
 
 class view extends display
 {
-    protected $layout   = null;
-    protected $template = null;
-    protected $file     = null;
-    protected $params   = null;
+    protected $file;
+    protected $propertys;
+    protected $benchmarck;
 
     /**
     * Carrega o layout da requisição
@@ -21,42 +20,54 @@ class view extends display
     * @return void
     * 
     */
-    final public function layout(string $layout, propertysInterface $params = null)
+    final public function layout(string $layout, propertysInterface $params)
     {
-        $this->setParams($params);
-        $this->setLayout($params);
-        parent::body(
-            $this->getLayout(),
-            $this->getParams()
-        );
+        if(isset($params)){
+            $this->setPropertys($params);
+        }
+        parent::body($this->getBenchmarck()->layouts($layout), $this->getPropertys());
 
         return;
     }
 
     /**
-     * Carrega o template parcial da requisição
-     *
-    * @param string $layout
+    * Recebe objeto de referência
+    *
+    * @param mixed $benchmarck
+    * 
+    * @return void
+    * 
+    */
+    final public function benchmarck($benchmarck)
+    {
+        $this->setBenchmarck($benchmarck);
+    }
+
+    /**
+    * Carrega o block da requisição
+    *
+    * @param string $block
     * @param propertysInterface|null $params
     * 
     * @return void
-     * 
-     */
-    public function template(string $layout, propertysInterface $params = null)
+    * 
+    */
+    final public function block(string $block, propertysInterface $params = null)
     {
-        $this->setParams($params);                   
-        parent::body(
-            $this->getTemplate(),
-            $this->getParams()
-        );
+        if(isset($params)){
+            $this->setPropertys($params);
+        }
+        parent::body($this->getBenchmarck()->blocks($block), $this->getPropertys());
+
         return;
-	}
+    }
     
     /**
      * Responde a requisição com um array do tipo json
-     * @param array $variables
+     * 
+     * @param array $params
      */
-    final public function json($params)
+    final public function json(array $params)
     {
         if(!isset($params) || empty($params)){
             throw new \Exception("Parameters JSON not found.");
@@ -69,52 +80,11 @@ class view extends display
      * Responde a requisição com um arquivo
      * @param array $variables
      */
-    final public function file($localRequest)
-    {
-        $this->setTemplate($localRequest);                   
-        exit(parent::render($this->getTemplate()));
-    }
-
-    /**
-     * Get the value of template
-     */ 
-    public function getTemplate()
-    {
-            return $this->template;
-    }
-
-    /**
-     * Set the value of template
-     *
-     * @return  self
-     */ 
-    public function setTemplate($template)
-    {
-        if(isset($template) && !empty($template))
-            $this->template = $this->existExtensionTemplate($template);
-        return $this;
-    }
-
-    /**
-     * Get the value of layout
-     */ 
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * Set the value of layout
-     *
-     * @return  self
-     */ 
-    public function setLayout($layout)
-    {
-        if(isset($layout) && !empty($layout)){
-            $this->layout = $layout;
-        }
-        return $this;
-    }
+    // final public function file($localRequest)
+    // {
+    //     $this->setTemplate($localRequest);                   
+    //     exit(parent::render($this->getTemplate()));
+    // }
 
     /**
      * Get the value of file
@@ -138,22 +108,45 @@ class view extends display
     }
 
     /**
-     * Get the value of params
+     * Get the value of propertys
      */ 
-    public function getParams()
+    public function getPropertys()
     {
-        return $this->params;
+        return $this->propertys;
     }
 
     /**
-     * Set the value of params
+     * Set the value of propertys
      *
      * @return  self
      */ 
-    public function setParams($params)
+    public function setPropertys(propertysInterface $propertys)
     {
-        if(isset($params) && !empty($params)){
-            $this->params = $params;
+        if(isset($propertys) && !empty($propertys)){
+            $this->propertys = $propertys;
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of benchmarck
+     */ 
+    public function getBenchmarck()
+    {
+        return $this->benchmarck;
+    }
+
+    /**
+     * Set the value of benchmarck
+     *
+     * @return  self
+     */ 
+    public function setBenchmarck($benchmarck)
+    {
+        if(isset($benchmarck) && !empty($benchmarck)){
+            $this->benchmarck = $benchmarck;
         }
 
         return $this;

@@ -2,6 +2,8 @@
 
 namespace douggonsouza\mvc\control;
 
+use douggonsouza\propertys\propertysInterface;
+
 interface actInterface
 {
     /**
@@ -11,13 +13,13 @@ interface actInterface
      */
     public function _before();
 
-
     /**
-     * Para ser disparado depois
+     * Função a ser executada no contexto da action
      *
+     * @param array $info
      * @return void
      */
-    public function _after();
+    public function main(propertysInterface $infos);
 }
 
 ?>
