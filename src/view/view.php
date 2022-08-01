@@ -2,8 +2,10 @@
 
 namespace douggonsouza\mvc\view;
 
+use douggonsouza\benchmarck\behaviorInterface;
 use douggonsouza\mvc\view\display;
 use douggonsouza\propertys\propertysInterface;
+use douggonsouza\benchmarck\identify;
 
 class view extends display
 {
@@ -74,6 +76,26 @@ class view extends display
         }
         header('Content-Type: application/json');
         exit(json_encode($params));
+    }
+
+    /**
+    * Carrega o local da identificação da requisição
+    *
+    * @param string                  $identify
+    * @param behaviorInterface       $config
+    * @param propertysInterface|null $params
+    * 
+    * @return void
+    * 
+    */
+    final public function identified(string $identify, propertysInterface $params = null)
+    {
+        if(isset($params)){
+            $this->setPropertys($params);
+        }
+        parent::body($this->getBenchmarck()->identified($identify), $this->getPropertys());
+
+        return;
     }
 
     /**
