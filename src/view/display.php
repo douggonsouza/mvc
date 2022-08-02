@@ -23,10 +23,10 @@ class display
 
         if(isset($params) && !empty($params)){
             $params = $params;
-        }           
+        } 
+
 
         return include($local);
-
 	}
                
     /**

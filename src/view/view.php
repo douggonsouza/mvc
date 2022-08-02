@@ -28,7 +28,6 @@ class view extends display
             $this->setPropertys($params);
         }
         parent::body($this->getBenchmarck()->layouts($layout), $this->getPropertys());
-
         return;
     }
 
@@ -60,7 +59,6 @@ class view extends display
             $this->setPropertys($params);
         }
         parent::body($this->getBenchmarck()->blocks($block), $this->getPropertys());
-
         return;
     }
     
@@ -94,7 +92,6 @@ class view extends display
             $this->setPropertys($params);
         }
         parent::body($this->getBenchmarck()->identified($identify), $this->getPropertys());
-
         return;
     }
 
