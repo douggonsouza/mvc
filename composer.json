@@ -16,6 +16,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "douggonsouza/propertys": "dev-main"
+        "douggonsouza/propertys": "^1.0.0"
     }
 }

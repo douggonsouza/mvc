@@ -22,6 +22,26 @@ interface propertysInterface
     public function __set(string $name, mixed $value);
 
     /**
+     * Adiciona propriedades
+     *
+     * @param array $propertys
+     * 
+     * @return self
+     * 
+     */
+    public function add(array $propertys);
+
+    /**
+     * Deleta propriedade
+     *
+     * @param string $property
+     * 
+     * @return self
+     * 
+     */
+    public function del(string $property);
+
+    /**
      * Exporta classe como array
      *
      * @return array
@@ -35,6 +55,6 @@ interface propertysInterface
      * @return string
      * 
      */
-    public function toSerializabe()
+    public function toSerializabe();
 }
 ?>
