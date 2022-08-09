@@ -12,6 +12,7 @@ class view extends display
     protected $file;
     protected $propertys;
     protected $benchmarck;
+    protected $page;
 
     /**
     * Carrega o layout da requisição
@@ -59,6 +60,24 @@ class view extends display
             $this->setPropertys($params);
         }
         parent::body($this->getBenchmarck()->blocks($block), $this->getPropertys());
+        return;
+    }
+
+    /**
+    * Carrega a Page Content da requisição
+    *
+    * @param string $page
+    * @param propertysInterface|null $params
+    * 
+    * @return void
+    * 
+    */
+    final public function page(string $page, propertysInterface $params = null)
+    {
+        if(isset($params)){
+            $this->setPropertys($params);
+        }
+        parent::body($page, $this->getPropertys());
         return;
     }
     
@@ -166,6 +185,28 @@ class view extends display
     {
         if(isset($benchmarck) && !empty($benchmarck)){
             $this->benchmarck = $benchmarck;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of page
+     */ 
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * Set the value of page
+     *
+     * @return  self
+     */ 
+    public function setPage($page)
+    {
+        if(isset($page) && !empty($page)){
+            $this->page = $page;
         }
 
         return $this;
