@@ -4,6 +4,12 @@ namespace douggonsouza\mvc\model\connection;
 
 abstract class conn
 {
+	protected static $host;
+	protected static $login;
+	protected static $password;
+	protected static $schema;
+
+	public $error = array();
 
 	static private $connection  = null;
 	static public $transaction;
@@ -21,12 +27,17 @@ abstract class conn
 	 */
 	static public function connection(string $host, string $login, string $password, string $schema)
 	{
+		self::$host  = $host;
+		self::$login = $login;
+		self::$password = $password;
+		self::$schema = $schema;
+
         if(!isset(self::$connection)){
 			self::$connection = mysqli_connect(
-				$host,
-				$login,
-				$password,
-				$schema
+				self::getHost(),
+				self::getLogin(),
+				self::getPassword(),
+				self::getSchema()
 			);
 			if (mysqli_connect_errno()) {
 				exit(sprintf("Connect failed: %s\n", mysqli_connect_error()));
@@ -49,19 +60,19 @@ abstract class conn
 	static public function getConnection()
 	{
 		if(!isset(self::$connection)){
-			if(!isset($_ENV["DBHOST"]) || !isset($_ENV["DBLOGIN"]) || !isset($_ENV["DBPASSWORD"]) || !isset($_ENV["DBSCHEMA"])){
+			if(!isset(self::$host) || !isset(self::$login) || !isset(self::$password) || !isset(self::$schema)){
 				self::setError("Não existem dados de conexão");
 				return null;
 			}
 
 			self::connection(
-                $_ENV["DBHOST"],
-                $_ENV["DBLOGIN"],
-                $_ENV["DBPASSWORD"],
-                $_ENV["DBSCHEMA"],
+                self::getHost(),
+                self::getLogin(),
+                self::getPassword(),
+                self::getSchema(),
             );
             if(!isset(self::$connection)){
-                self::setError(self::getConn()->error);
+                self::setError('Erro durante a conexão.');
                 return null;
             }
 		}
@@ -131,5 +142,59 @@ abstract class conn
 	{
 		if(isset($transaction) && !empty($transaction))
 			self::$transaction = $transaction;
+	}
+
+	/**
+	 * Get the value of host
+	 */ 
+	public static function getHost()
+	{
+		return self::$host;
+	}
+
+	/**
+	 * Get the value of login
+	 */ 
+	public static function getLogin()
+	{
+		return self::$login;
+	}
+
+	/**
+	 * Get the value of password
+	 */ 
+	public static function getPassword()
+	{
+		return self::$password;
+	}
+
+	/**
+	 * Get the value of schema
+	 */ 
+	public static function getSchema()
+	{
+		return self::$schema;
+	}
+
+	/**
+	 * Get the value of error
+	 */ 
+	public function getError()
+	{
+		return $this->error;
+	}
+
+	/**
+	 * Set the value of error
+	 *
+	 * @return  self
+	 */ 
+	public function setError($error)
+	{
+		if(isset($error) && !empty($error)){
+			$this->error[] = $error;
+		}
+
+		return $this;
 	}
 }

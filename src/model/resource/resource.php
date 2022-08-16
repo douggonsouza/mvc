@@ -15,32 +15,37 @@ class resource implements resourceInterface
     protected $isEof = true;
     protected $new   = true;
 
+    public function __construct()
+    {
+        self::setConn(conn::getConnection());
+    }
+
     /**
      * Conecta o banco de dados
      *
      * @return object
      */
-    protected static function conn()
-    {
-        if(!isset($_ENV["DBHOST"]) || !isset($_ENV["DBLOGIN"]) || !isset($_ENV["DBPASSWORD"]) || !isset($_ENV["DBSCHEMA"])){
-            return false;
-        }
+    // protected static function conn()
+    // {
+    //     if(!isset($_ENV["DBHOST"]) || !isset($_ENV["DBLOGIN"]) || !isset($_ENV["DBPASSWORD"]) || !isset($_ENV["DBSCHEMA"])){
+    //         return false;
+    //     }
 
-        if(empty(self::getConn())){
-            self::setConn(conn::connection(
-                $_ENV["DBHOST"],
-                $_ENV["DBLOGIN"],
-                $_ENV["DBPASSWORD"],
-                $_ENV["DBSCHEMA"],
-            ));
-            if(empty(self::getConn())){
-                self::setError(self::getConn()->error);
-                return false;
-            }
-        }
+    //     if(empty(self::getConn())){
+    //         self::setConn(conn::connection(
+    //             $_ENV["DBHOST"],
+    //             $_ENV["DBLOGIN"],
+    //             $_ENV["DBPASSWORD"],
+    //             $_ENV["DBSCHEMA"],
+    //         ));
+    //         if(empty(self::getConn())){
+    //             self::setError(self::getConn()->error);
+    //             return false;
+    //         }
+    //     }
 
-        return true;
-    }
+    //     return true;
+    // }
 
     /**
      * Expõe o total de linha afetadas pela query
@@ -79,7 +84,6 @@ class resource implements resourceInterface
             return false;
         }
 
-        self::conn();
         if(!self::getConn()){
             return false;
         }
@@ -114,7 +118,6 @@ class resource implements resourceInterface
             return false;
         }
 
-        self::conn();
         if(!self::getConn()){
             return false;
         }

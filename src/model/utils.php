@@ -9,7 +9,7 @@ class utils
      *
      * @param string $type
      * @param mixed $value
-     * @return void
+     * @return mixed
      */
     public function prepareValueByColumns(string $type, $value)
     {
@@ -34,6 +34,7 @@ class utils
             case 'char':
             case 'date':
             case 'datetime':
+            case 'enum':
                 return "'".$value."'";
             break;
             default:
@@ -70,6 +71,6 @@ class utils
             return null;
         }
 
-        return (string) preg_replace("/[^A-Za-z]/", "", $type); 
+        return (explode('(', $type))[0];
     }
 }

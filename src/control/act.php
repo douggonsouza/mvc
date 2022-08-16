@@ -3,9 +3,9 @@
 namespace douggonsouza\mvc\control;
 
 use douggonsouza\mvc\control\exiting;
-use douggonsouza\routes\router;
 use douggonsouza\propertys\propertysInterface;
 use douggonsouza\mvc\control\actInterface;
+use douggonsouza\logged\logged;
 
 abstract class act extends exiting implements actInterface
 {

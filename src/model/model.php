@@ -11,11 +11,12 @@ class model extends utils implements modelInterface
     public    $table;
     public    $key;
     public    $dicionary = null;
+    public    $options;
     protected $records;
     protected $error;
     protected $model = false;
 
-    public function __construct(string $table, string $key)
+    public function __construct(string $table = null, string $key = null)
     {
         $this->setTable($table);
         $this->setKey($key);
@@ -77,6 +78,28 @@ class model extends utils implements modelInterface
     }
 
     /**
+     * Exporta objeto do tipo dicionary
+     * 
+     * @param string $dicionarySQL
+     * 
+     * @return object
+     */
+    public function options()
+    {
+        if(empty($this->getDicionary())){
+            return null;
+        }
+
+        $resource = new resource();
+        $options = $resource->execute($this->getOptions());
+        if(!isset($options)){
+            $this->setError($resource->getError());
+            return null;
+        }
+        return $options;
+    }
+
+    /**
      * Move o ponteiro para o prÃ³ximo
      * 
      */
@@ -99,7 +122,7 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        return $this->getRecords()->previus();
+        return $this->getRecords()->previous();
     }
 
     /**
@@ -323,12 +346,11 @@ class model extends utils implements modelInterface
             );
         }
 
-        return $this->execute(
-            sprintf(
-                'SHOW COLUMNS FROM %s',
-                $table
-            )
+        $sql = sprintf(
+            'SHOW COLUMNS FROM %s',
+            $table
         );
+        return $this->execute($sql);
     }
 
     /**
@@ -634,6 +656,7 @@ class model extends utils implements modelInterface
                 }
                 continue;
             }
+
             if(isset($where)){
                 $content[$item['Field']] = $item['Field'].' = '.$this->prepareValueByColumns(
                     $this->type($item['Type']),
@@ -645,13 +668,21 @@ class model extends utils implements modelInterface
                 $this->type($item['Type']),
                 $data[$item['Field']]
             );
+            // created
+            if(isset($item['Field']) && $item['Field'] == 'created'){
+                $content[$item['Field']] = 'NOW()';
+            }
+            // modified
+            if(isset($item['Field']) && $item['Field'] == 'modified'){
+                $content[$item['Field']] = 'NOW()';
+            }
         }
 
         // update
         if(isset($where)){
             $sql = sprintf(
                 "UPDATE %1\$s SET %2\$s WHERE %3\$s;",
-                $infoColumns['table'],
+                $this->getTable(),
                 implode(', ',$content),
                 $where
             );
@@ -660,7 +691,7 @@ class model extends utils implements modelInterface
         // save
         $sql = sprintf(
             "INSERT INTO %1\$s (%2\$s) VALUES (%3\$s);",
-            $infoColumns['table'],
+            $this->getTable(),
             implode(', ', array_keys($content)),
             implode(', ',$content),
         );
@@ -776,7 +807,7 @@ class model extends utils implements modelInterface
      *
      * @return  self
      */ 
-    public function setTable(string $table)
+    public function setTable($table)
     {
         if(isset($table) && !empty($table)){
             $this->table = $table;
@@ -798,7 +829,7 @@ class model extends utils implements modelInterface
      *
      * @return  self
      */ 
-    public function setKey(string $key)
+    public function setKey($key)
     {
         if(isset($key) && !empty($key)){
             $this->key = $key;
@@ -890,6 +921,28 @@ class model extends utils implements modelInterface
         if(isset($model)){
             $this->model = $model;
         }
+        return $this;
+    }
+
+    /**
+     * Get the value of options
+     */ 
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Set the value of options
+     *
+     * @return  self
+     */ 
+    private function setOptions($options)
+    {
+        if(isset($options) && !empty($options)){
+            $this->options = $options;
+        }
+
         return $this;
     }
 }

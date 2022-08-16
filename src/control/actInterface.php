@@ -11,7 +11,7 @@ interface actInterface
      *
      * @return void
      */
-    public function _before();
+    public function _before(propertysInterface $info = null);
 
     /**
      * Função a ser executada no contexto da action
