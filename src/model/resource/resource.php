@@ -21,33 +21,6 @@ class resource implements resourceInterface
     }
 
     /**
-     * Conecta o banco de dados
-     *
-     * @return object
-     */
-    // protected static function conn()
-    // {
-    //     if(!isset($_ENV["DBHOST"]) || !isset($_ENV["DBLOGIN"]) || !isset($_ENV["DBPASSWORD"]) || !isset($_ENV["DBSCHEMA"])){
-    //         return false;
-    //     }
-
-    //     if(empty(self::getConn())){
-    //         self::setConn(conn::connection(
-    //             $_ENV["DBHOST"],
-    //             $_ENV["DBLOGIN"],
-    //             $_ENV["DBPASSWORD"],
-    //             $_ENV["DBSCHEMA"],
-    //         ));
-    //         if(empty(self::getConn())){
-    //             self::setError(self::getConn()->error);
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // }
-
-    /**
      * Expõe o total de linha afetadas pela query
      * @return int
     */
@@ -58,6 +31,19 @@ class resource implements resourceInterface
         }
 
         return mysqli_num_rows($this->getResource());
+    }
+
+    /**
+     * Exist dados para o recurso
+     * @return int
+    */
+    public function exist()
+    {
+        if(empty($this->getResource())){
+            return false;
+        }
+
+        return mysqli_num_rows($this->getResource()) >= 1;
     }
 
     /**

@@ -85,14 +85,19 @@ class view extends display
      * Responde a requisição com um array do tipo json
      * 
      * @param array $params
+     * 
+     * @return void
      */
-    final public function json(array $params)
+    final public function json(array $params = array())
     {
         if(!isset($params) || empty($params)){
-            throw new \Exception("Parameters JSON not found.");
+            header('Content-Type: application/json');
+            exit(json_encode(array()));
         }
+
         header('Content-Type: application/json');
         exit(json_encode($params));
+        return;
     }
 
     /**

@@ -16,11 +16,16 @@ class model extends utils implements modelInterface
     protected $error;
     protected $model = false;
 
-    public function __construct(string $table = null, string $key = null)
+    public function __construct(int $id = null, string $table = null, string $key = null)
     {
         $this->setTable($table);
         $this->setKey($key);
         $this->setModel(true);
+        if(isset($id) && !empty($id)){
+            $this->search(array(
+                $this->getKey() => $id
+            ));
+        }
     }
 
     /**
@@ -84,14 +89,25 @@ class model extends utils implements modelInterface
      * 
      * @return object
      */
-    public function options()
+    public function options(array $where = null)
     {
-        if(empty($this->getDicionary())){
-            return null;
+        // define condições
+        $lWhere = '';
+        if(isset($where) && !empty($where)){
+            $lWhere = sprintf(
+                'WHERE %s',
+                implode(' AND ', $where)
+            );
         }
 
+        // forma query
+        $sql = sprintf(
+            $this->getOptions(),
+            $lWhere
+        );
+
         $resource = new resource();
-        $options = $resource->execute($this->getOptions());
+        $options = $resource->execute($sql);
         if(!isset($options)){
             $this->setError($resource->getError());
             return null;
@@ -442,6 +458,19 @@ class model extends utils implements modelInterface
     }
 
     /**
+     * Expõe o total de linha afetadas pela query
+     * @return int
+    */
+    public function exist()
+    {
+        if(empty($this->getRecords())){
+            return false;
+        }
+
+        return $this->getRecords()->exist();
+    }
+
+    /**
      * Devolve array associativo de todos os registros
      * 
      * @return array|null
@@ -542,7 +571,7 @@ class model extends utils implements modelInterface
      * Busca entre os registros da tabela
      *
      * @param array $search
-     * @return void
+     * @return self
      */
     public function seek(array $search = null)
     {
@@ -559,7 +588,7 @@ class model extends utils implements modelInterface
      * Busca entre os registros
      *
      * @param string $table
-     * @return bool
+     * @return self
      */
     public function search(array $search)
     {
@@ -589,7 +618,12 @@ class model extends utils implements modelInterface
 
         return $this;
     }
-
+    
+    /**
+     * isNew
+     *
+     * @return mixed
+     */
     public function isNew()
     {
         if(empty($this->getRecords())){
@@ -664,18 +698,54 @@ class model extends utils implements modelInterface
                 ).'';
                 continue;
             }
-            $content[$item['Field']] = $this->prepareValueByColumns(
-                $this->type($item['Type']),
-                $data[$item['Field']]
-            );
+
+            // active
+            if(isset($item['Field']) && $item['Field'] == 'active'){
+                if(isset($data[$item['Field']])){
+                    $content[$item['Field']] = $item['Field'].' = '.$this->prepareValueByColumns(
+                        $this->type($item['Type']),
+                        $data[$item['Field']]
+                    ).'';
+                }
+                continue;
+            }
             // created
             if(isset($item['Field']) && $item['Field'] == 'created'){
                 $content[$item['Field']] = 'NOW()';
+                if(isset($data[$item['Field']])){
+                    $content[$item['Field']] = $item['Field'].' = '.$this->prepareValueByColumns(
+                        $this->type($item['Type']),
+                        $data[$item['Field']]
+                    ).'';
+                }
+                continue;
             }
             // modified
             if(isset($item['Field']) && $item['Field'] == 'modified'){
                 $content[$item['Field']] = 'NOW()';
+                if(isset($data[$item['Field']])){
+                    $content[$item['Field']] = $item['Field'].' = '.$this->prepareValueByColumns(
+                        $this->type($item['Type']),
+                        $data[$item['Field']]
+                    ).'';
+                }
+                continue;
             }
+            // removed
+            if(isset($item['Field']) && $item['Field'] == 'removed'){
+                if(isset($data[$item['Field']])){
+                    $content[$item['Field']] = $item['Field'].' = '.$this->prepareValueByColumns(
+                        $this->type($item['Type']),
+                        $data[$item['Field']]
+                    ).'';
+                }
+                continue;
+            }
+
+            $content[$item['Field']] = $this->prepareValueByColumns(
+                $this->type($item['Type']),
+                $data[$item['Field']]
+            );
         }
 
         // update
