@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+?>
+<html lang="pt-br">
+<head>
+    <title>Layout padrão Benchmarck</title>
+
+    <link rel="stylesheet" type="text/css" href="<?= router::assets("/css/main.css", assets::ABSOLUTE_URL) ?>" media="screen">
+</head>
+<body>
+    <!-- Layout padrão Benchmarck -->
+    <?php
+        // router::block('\\discovery\\controls\\login:loginFrame', $params);
+        router::identify('login', $params)
+    ?>
+</body>
+</html>

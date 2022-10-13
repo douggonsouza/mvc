@@ -1,0 +1,75 @@
+<?php 
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+?>
+                <section class="au-breadcrumb2">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <!-- BLOCO -->
+                                <!-- dashboard2PageContentBreadcrumbBlock-->
+                                <!-- BREADCRUMB-->
+
+                                <?php
+                                    router::identify('dashboard2PageContentBreadcrumbBlock', $params)
+                                ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- END BREADCRUMB-->
+
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <!-- BLOCO -->
+                                <!-- dashboard2AlertsBlock -->
+
+                                <?php
+                                    router::identify('dashboard2PageContentAlertsBlock', $params);
+                                ?>
+
+                                <!-- BLOCO -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="welcome p-t-10">
+                    <div class="container">
+                        <div class="row">
+
+                            <!-- BLOCO -->
+                            <!-- dashboard2PageContentPageBlock-->
+                            <!-- WELCOME-->
+
+                            <?php
+                                router::identify('dashboard2PageContentPageBlock', $params);
+                            ?>
+
+                        </div>
+                    </div>
+                </section>
+                <!-- END WELCOME-->
+
+                <section class="p-t-60 p-b-20">
+                    <div class="container">
+                        <div class="row">
+
+                            <!-- BLOCO -->
+                            <!-- dashboard2PageContentCopyrightBlock-->
+                            <!-- COPYRIGHT-->
+
+                            <?php
+                                router::identify('dashboard2PageContentCopyrightBlock', $params)
+                            ?>
+                            
+                        </div>
+                    </div>
+                </section>
+                <!-- END COPYRIGHT-->

@@ -1,0 +1,71 @@
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+    use douggonsouza\logged\logged;
+    use douggonsouza\logged\models\user;
+    use douggonsouza\propertys\propertys;
+
+    $perfil = (new user())->perfil(logged::getId());
+    if(!isset($perfil)){
+        $perfil = new propertys();
+    }
+?>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body card-block">
+                                        <div class="col-md-12">
+                                            <div class="overview-wrap">
+                                                <button class="au-btn au-btn-icon au-btn--blue">
+                                                    <?= router::label('add'); ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body card-block">
+                                        <div class="col-md-12">
+                                            <div class="overview-wrap">
+                                                <h2 class="title-1"><?= router::label('title_perfil'); ?></h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body card-block">
+                                            <div class="form-group">
+                                                <label for="name" class=" form-control-label"><?= router::label('name'); ?></label>
+                                                <span><?= isset($perfil->name)? $perfil->name: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="document" class=" form-control-label"><?= router::label('document'); ?></label>
+                                                <span id="document"><?= isset($perfil->document)? $perfil->document: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email" class=" form-control-label"><?= router::label('email'); ?></label>
+                                                <span id="email"><?= isset($perfil->email)? $perfil->email: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="birthday" class=" form-control-label"><?= router::label('birthday'); ?></label>
+                                                <span id="birthday"><?= isset($perfil->birthday)? $perfil->birthday: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="genre" class=" form-control-label"><?= router::label('genre'); ?></label>
+                                                <span id="genre"><?= isset($perfil->genre)? $perfil->genre: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="school" class=" form-control-label"><?= router::label('school'); ?></label>
+                                                <span id="school"><?= isset($perfil->school)? $perfil->school: null; ?></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="office" class=" form-control-label"><?= router::label('office'); ?></label>
+                                                <span id="office"><?= isset($perfil->office)? $perfil->office: null; ?></span>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>

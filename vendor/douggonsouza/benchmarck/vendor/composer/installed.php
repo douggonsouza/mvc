@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'douggonsouza/benchmarck',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '57550bd8f24d454b18834efd345aabac74ff2ccf',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'douggonsouza/benchmarck' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '57550bd8f24d454b18834efd345aabac74ff2ccf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'douggonsouza/language' => array(
+            'pretty_version' => 'v1.0.4',
+            'version' => '1.0.4.0',
+            'reference' => 'b63647bc60d5a9cf13348bfcd17839b938b08120',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../douggonsouza/language',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'douggonsouza/propertys' => array(
+            'pretty_version' => 'v1.0.4',
+            'version' => '1.0.4.0',
+            'reference' => 'ebd7471bf7279f2e2520c6b7eadfcf6171ab47cf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../douggonsouza/propertys',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

@@ -1,0 +1,22 @@
+<?php
+    use douggonsouza\routes\router;
+    use \douggonsouza\alerts\alerts;
+    use douggonsouza\benchmarck\assets\assets;
+
+    $existAlerts = router::alerts()::exist();
+?>
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <?php
+                                if($existAlerts){
+                                    echo router::alerts()::get();
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>

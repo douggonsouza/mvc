@@ -1,0 +1,2 @@
+# propertys
+Armazenagem das propriedades

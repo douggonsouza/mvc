@@ -11,6 +11,8 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
         array (
             'douggonsouza\\propertys\\' => 23,
             'douggonsouza\\mvc\\' => 17,
+            'douggonsouza\\language\\' => 22,
+            'douggonsouza\\benchmarck\\' => 24,
         ),
     );
 
@@ -23,12 +25,33 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
+        'douggonsouza\\language\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/douggonsouza/language/src',
+        ),
+        'douggonsouza\\benchmarck\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/douggonsouza/benchmarck/src',
+        ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'douggonsouza\\benchmarck\\alerts' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/alerts.php',
+        'douggonsouza\\benchmarck\\alertsInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/alertsInterface.php',
+        'douggonsouza\\benchmarck\\assets\\assets' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/assets/assets.php',
+        'douggonsouza\\benchmarck\\behaviorInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/behaviorInterface.php',
+        'douggonsouza\\benchmarck\\benchmarck' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/benchmarck.php',
+        'douggonsouza\\benchmarck\\benchmarckInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/benchmarckInterface.php',
+        'douggonsouza\\benchmarck\\blocks\\blocks' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/blocks/blocks.php',
+        'douggonsouza\\benchmarck\\identify' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/identify.php',
+        'douggonsouza\\language\\language' => __DIR__ . '/..' . '/douggonsouza/language/src/language.php',
+        'douggonsouza\\language\\languageInterface' => __DIR__ . '/..' . '/douggonsouza/language/src/languageInterface.php',
         'douggonsouza\\mvc\\control\\act' => __DIR__ . '/../..' . '/src/control/act.php',
         'douggonsouza\\mvc\\control\\actInterface' => __DIR__ . '/../..' . '/src/control/actInterface.php',
+        'douggonsouza\\mvc\\control\\controllers' => __DIR__ . '/../..' . '/src/control/controllers.php',
+        'douggonsouza\\mvc\\control\\controllersAdpter' => __DIR__ . '/../..' . '/src/control/controllersAdpter.php',
+        'douggonsouza\\mvc\\control\\controllersInterface' => __DIR__ . '/../..' . '/src/control/controllersInterface.php',
         'douggonsouza\\mvc\\control\\exiting' => __DIR__ . '/../..' . '/src/control/exiting.php',
         'douggonsouza\\mvc\\model\\connection\\conn' => __DIR__ . '/../..' . '/src/model/connection/conn.php',
         'douggonsouza\\mvc\\model\\model' => __DIR__ . '/../..' . '/src/model/model.php',
@@ -44,7 +67,16 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
         'douggonsouza\\mvc\\model\\validate\\notnull' => __DIR__ . '/../..' . '/src/model/validate/notnull.php',
         'douggonsouza\\mvc\\view\\display' => __DIR__ . '/../..' . '/src/view/display.php',
         'douggonsouza\\mvc\\view\\mimes' => __DIR__ . '/../..' . '/src/view/mimes.php',
+        'douggonsouza\\mvc\\view\\screens' => __DIR__ . '/../..' . '/src/view/screens.php',
+        'douggonsouza\\mvc\\view\\screensInterface' => __DIR__ . '/../..' . '/src/view/screensInterface.php',
+        'douggonsouza\\mvc\\view\\templates' => __DIR__ . '/../..' . '/src/view/templates.php',
+        'douggonsouza\\mvc\\view\\templatesFactory' => __DIR__ . '/../..' . '/src/view/templatesFactory.php',
+        'douggonsouza\\mvc\\view\\templatesInterface' => __DIR__ . '/../..' . '/src/view/templatesInterface.php',
+        'douggonsouza\\mvc\\view\\variables' => __DIR__ . '/../..' . '/src/view/variables.php',
+        'douggonsouza\\mvc\\view\\variablesInterface' => __DIR__ . '/../..' . '/src/view/variablesInterface.php',
         'douggonsouza\\mvc\\view\\view' => __DIR__ . '/../..' . '/src/view/view.php',
+        'douggonsouza\\mvc\\view\\views' => __DIR__ . '/../..' . '/src/view/views.php',
+        'douggonsouza\\mvc\\view\\viewsInterface' => __DIR__ . '/../..' . '/src/view/viewsInterface.php',
         'douggonsouza\\propertys\\propertys' => __DIR__ . '/..' . '/douggonsouza/propertys/src/propertys.php',
         'douggonsouza\\propertys\\propertysInterface' => __DIR__ . '/..' . '/douggonsouza/propertys/src/propertysInterface.php',
     );

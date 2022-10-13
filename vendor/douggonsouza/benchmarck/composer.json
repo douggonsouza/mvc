@@ -1,0 +1,22 @@
+{
+    "name": "douggonsouza/benchmarck",
+    "description": "Páginas de referência",
+    "type": "library",
+    "require": {
+        "douggonsouza/propertys": "^1.0.0",
+        "douggonsouza/language": "^1.0.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "douggonsouza\\benchmarck\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Douglas Gonçalves de Souza",
+            "email": "douggonsouza@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}

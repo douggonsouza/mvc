@@ -13,6 +13,9 @@ class view extends display
     protected $propertys;
     protected $benchmarck;
     protected $page;
+    protected $block;
+    protected $layout;
+    protected $identifyLayout;
 
     /**
     * Carrega o layout da requisição
@@ -28,7 +31,10 @@ class view extends display
         if(isset($params)){
             $this->setPropertys($params);
         }
-        parent::body($this->getBenchmarck()->layouts($layout), $this->getPropertys());
+
+        $this->setLayout($this->getBenchmarck()->layouts($layout));
+
+        parent::body($this->getLayout(), $this->getPropertys());
         return;
     }
 
@@ -59,7 +65,10 @@ class view extends display
         if(isset($params)){
             $this->setPropertys($params);
         }
-        parent::body($this->getBenchmarck()->blocks($block), $this->getPropertys());
+
+        $this->setBlock($this->getBenchmarck()->blocks($block));
+
+        parent::body($this->getBlock(), $this->getPropertys());
         return;
     }
 
@@ -77,7 +86,10 @@ class view extends display
         if(isset($params)){
             $this->setPropertys($params);
         }
-        parent::body($page, $this->getPropertys());
+
+        $this->setPage($page);
+
+        parent::body($this->getPage(), $this->getPropertys());
         return;
     }
     
@@ -110,13 +122,35 @@ class view extends display
     * @return void
     * 
     */
-    final public function identified(string $identify, propertysInterface $params = null)
+    final public function identified(string $identify, propertysInterface $params = null, string $layout = null)
     {
         if(isset($params)){
             $this->setPropertys($params);
         }
-        parent::body($this->getBenchmarck()->identified($identify), $this->getPropertys());
+
+        $this->identifyLayout($layout);
+        $this->setPage($this->getBenchmarck()->identified($identify));
+
+        parent::body($this->getLayout(), $this->getPropertys());
         return;
+    }
+
+    /**
+     * Set the value of identifyLayout
+     *
+     * @return  self
+     */ 
+    public function identifyLayout(string $identifyLayout = null)
+    {
+        if(isset($identifyLayout) && !empty($identifyLayout)){
+            $this->setIdentifyLayout($identifyLayout);
+        }
+
+        if(isset($this->identifyLayout)){
+            $this->setlayout($this->getBenchmarck()->identified($this->getIdentifyLayout()));
+        }
+
+        return $this;
     }
 
     /**
@@ -212,6 +246,72 @@ class view extends display
     {
         if(isset($page) && !empty($page)){
             $this->page = $page;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of layout
+     */ 
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Set the value of layout
+     *
+     * @return  self
+     */ 
+    public function setLayout($layout)
+    {
+        if(isset($layout) && !empty($layout)){
+            $this->layout = $layout;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of block
+     */ 
+    public function getBlock()
+    {
+        return $this->block;
+    }
+
+    /**
+     * Set the value of block
+     *
+     * @return  self
+     */ 
+    public function setBlock($block)
+    {
+        if(isset($block) && !empty($block)){
+            $this->block = $block;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of identifyLayout
+     */ 
+    public function getIdentifyLayout()
+    {
+        return $this->identifyLayout;
+    }
+
+    /**
+     * Set the value of identifyLayout
+     *
+     * @return  self
+     */ 
+    public function setIdentifyLayout($identifyLayout)
+    {
+        if(isset($identifyLayout) && !empty($identifyLayout)){
+            $this->identifyLayout = $identifyLayout;
         }
 
         return $this;

@@ -1,0 +1,19 @@
+<?php 
+    use douggonsouza\routes\router;
+
+    $existAlerts = router::alerts()::exist();
+?>           
+                                <div class="card-body">
+                                    <div class="sufee-alert alert with-close alert-primary alert-dismissible fade show">
+                                        <span class="badge badge-pill badge-primary">Success</span>
+                                        You successfully read this important alert.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <?php
+                                        if($existAlerts){
+                                            echo router::alerts()::get();
+                                        }
+                                    ?>
+                                </div>

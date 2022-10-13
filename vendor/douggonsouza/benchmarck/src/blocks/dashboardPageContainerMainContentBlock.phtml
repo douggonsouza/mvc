@@ -1,0 +1,45 @@
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+
+?>
+
+                <div class="main-content">
+
+                    <!-- BLOCO -->
+                    <!-- dashboardPageContainerMainContentAlertsBlock -->
+
+                    <?php
+                        router::identify('dashboardPageContainerMainContentAlertsBlock', $params);
+                    ?>
+
+                    <!-- BLOCO -->
+                    <!-- dashboardPageContainerMainContentPageBlock -->
+
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+
+                            <?php
+                                router::page($params);
+                            ?>
+
+                        </div>
+                    </div>
+
+                    <!-- BLOCO -->
+
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="copyright">
+                                        <p><?= router::label('copyright'); ?></a>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BLOCO -->
+                    
+                </div>

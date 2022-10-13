@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+
+    $existAlerts = router::alerts()::exist();
+?>
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="<?= router::label('author'); ?>">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Forget Password</title>
+
+    <!-- BLOCO -->
+    <!-- forget-passCssBlock -->
+
+        <?php
+            router::identify('forgetpassCssBlock', $params);
+        ?>
+
+    <!-- BLOCO -->
+
+</head>
+
+<body class="animsition">
+
+    <!-- BLOCO -->
+    <!-- forget-passJsBlock -->
+
+    <?php
+            router::identify('forgetpassJsBlock', $params);
+        ?>
+
+    <!-- BLOCO -->
+    
+    <div class="page-wrapper">
+
+        <!-- BLOCO -->
+        <!-- forget-passPageContentBlock -->
+
+            <?php
+                router::identify('forgetpassPageContentBlock', $params);
+            ?>
+
+        <!-- BLOCO -->
+
+    </div>
+</body>
+
+</html>
+<!-- end document-->
