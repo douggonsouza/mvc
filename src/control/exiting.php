@@ -62,51 +62,51 @@ class exiting extends view
      * @param string $file
      * @return bool;
      */
-    final public function exit($params = array(), $type = self::TYPE_TEMPLATE, $file = null)
-    {
-        $this->init($file, $type);
+    // final public function exit($params = array(), $type = self::TYPE_TEMPLATE, $file = null)
+    // {
+    //     $this->init($file, $type);
         
-        try{
-            switch($this->getType()){
-                case self::TYPE_TEMPLATE:
-                    if(empty($this->getTemplate())){
-                        throw new \Exception('Não existe template para ser carregado.');
-                    }
-                    if(!empty($this->getFile())){
-                        $this->setTemplate($this->getFile());
-                    }
-                    $this->view($this->getParams());
-                    break;
-                case self::TYPE_PARTIAL:
-                    if(empty($this->getLayout())){
-                        throw new \Exception('Não existe o layout a ser carregado.');
-                    }
-                    if(!empty($this->getFile())){
-                        $this->setLayout($this->getFile());
-                    }
-                    $this->view($this->getParams());
-                    break;
-                case self::TYPE_JSON:
-                    $this->setParams($params);
-                    if(empty($this->getParams())){
-                        throw new \Exception('Não existe informações para serem enviadas.');
-                    }
-                    $this->json($this->getParams());
-                    break;
-                case self::TYPE_FILE:
-                    if(empty($this->getFile())){
-                        throw new \Exception('Não existe caminho de Requisição.');
-                    }
-                    $this->file($this->getFile());
-                    break;
-                default:
-                    throw new \Exception('Não configurado o Tipo de saída.');
-            }
-            return true;
-        }catch(\Exception $e){
-            return false;
-        }
-    }
+    //     try{
+    //         switch($this->getType()){
+    //             case self::TYPE_TEMPLATE:
+    //                 if(empty($this->getTemplate())){
+    //                     throw new \Exception('Não existe template para ser carregado.');
+    //                 }
+    //                 if(!empty($this->getFile())){
+    //                     $this->setTemplate($this->getFile());
+    //                 }
+    //                 $this->view($this->getParams());
+    //                 break;
+    //             case self::TYPE_PARTIAL:
+    //                 if(empty($this->getLayout())){
+    //                     throw new \Exception('Não existe o layout a ser carregado.');
+    //                 }
+    //                 if(!empty($this->getFile())){
+    //                     $this->setLayout($this->getFile());
+    //                 }
+    //                 $this->view($this->getParams());
+    //                 break;
+    //             case self::TYPE_JSON:
+    //                 $this->setParams($params);
+    //                 if(empty($this->getParams())){
+    //                     throw new \Exception('Não existe informações para serem enviadas.');
+    //                 }
+    //                 $this->json($this->getParams());
+    //                 break;
+    //             case self::TYPE_FILE:
+    //                 if(empty($this->getFile())){
+    //                     throw new \Exception('Não existe caminho de Requisição.');
+    //                 }
+    //                 $this->file($this->getFile());
+    //                 break;
+    //             default:
+    //                 throw new \Exception('Não configurado o Tipo de saída.');
+    //         }
+    //         return true;
+    //     }catch(\Exception $e){
+    //         return false;
+    //     }
+    // }
 
     /**
      * Get the value of type

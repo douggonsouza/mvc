@@ -17,7 +17,20 @@ class controllers extends screens implements controllersInterface
      */
     public function main(propertysInterface $infos)
     {
-        return views::identified('', $infos);
+        return self::view('', $infos);
+    }
+    
+    /**
+     * Method view
+     *
+     * @param string             $template [explicite description]
+     * @param propertysInterface $params   [explicite description]
+     *
+     * @return void
+     */
+    public static function view(string $template, propertysInterface $params = null)
+    {
+        return views::view($template, $params);
     }
 
     /**
@@ -44,36 +57,5 @@ class controllers extends screens implements controllersInterface
     public function _before(propertysInterface $info = null)
     {
         return true;
-    }
-    
-    /**
-     * Method request
-     *
-     * @param string             $function [explicite description]
-     * @param propertysInterface $info [explicite description]
-     *
-     * @return void
-     */
-    public function roles(string $function, propertysInterface $info = null)
-    {
-        if(!isset($function) || empty($function)){
-            throw new \Exception('Não identificado o parâmetro com o nome da função.');
-        }
-
-        if(!$this->_before()){
-            throw new \Exception('Checagem anterior à função de resposta inválida.');
-        }
-
-        try{
-            $this->$function($info);
-        }catch(\Exception $e){
-            throw new \Exception($e->getMessage());
-        }
-
-        if(!$this->_after()){
-            throw new \Exception('Checagem posterior à função de resposta inválida.');
-        }
-
-        return;
     }
 }

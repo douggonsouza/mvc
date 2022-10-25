@@ -2,7 +2,7 @@
 
 namespace douggonsouza\mvc\view;
 
-interface variablesInterface
+interface attributesInterface
 {
 
 }

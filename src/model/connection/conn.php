@@ -2,17 +2,21 @@
 
 namespace douggonsouza\mvc\model\connection;
 
-abstract class conn
+use douggonsouza\mvc\model\connection\connInterface;
+use douggonsouza\mvc\model\resource\records;
+use douggonsouza\mvc\model\resource\recordsInterface;
+
+
+abstract class conn implements connInterface
 {
 	protected static $host;
 	protected static $login;
 	protected static $password;
 	protected static $schema;
 
-	public $error = array();
+	public static $error;
 
-	static private $connection  = null;
-	static public $transaction;
+	private static $connection  = null;
 
 	private function __construct(){	}
 	
@@ -25,7 +29,7 @@ abstract class conn
 	 * @param string $schema
 	 * @return void
 	 */
-	static public function connection(string $host, string $login, string $password, string $schema)
+	public static function connection(string $host, string $login, string $password, string $schema)
 	{
 		self::$host  = $host;
 		self::$login = $login;
@@ -79,32 +83,148 @@ abstract class conn
 
 		return self::$connection;
 	}
-
+    
     /**
+     * Method select
+     *
+     * @param string $sql [explicite description]
+     *
+     * @return recordsInterface
+     */
+    public static function select(string $sql)
+    {
+        if(!isset($sql) || empty($sql) || !self::getConnection()){
+            return false;
+        }
+        
+        try{
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
+
+            $resource = mysqli_query(self::getConnection(), (string) $sql);
+            
+            if(!empty(mysqli_error(self::getConnection()))){
+                self::setError(mysqli_error(self::getConnection()));
+                return false;
+            }
+
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
+
+			if(is_bool($resource)){
+				self::setError('Não trata-se de um recurso.');
+				return null;
+			}
+
+			$records = new records($resource);
+			$records->data();
+
+            return $records;
+        }
+        catch(\Exception $e){
+			self::setError( $e->getMessage());
+            return false;
+        }
+    }
+  
+    /**
+     * Method selectWithArray
+     *
+     * @param string $sql [explicite description]
+     *
+     * @return void
+     */
+    public static function selectAsArray(string $sql)
+    {
+        if(!isset($sql) || empty($sql) || !self::getConnection()){
+            return false;
+        }
+        
+        try{
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
+
+            $resource = mysqli_query(self::getConnection(), (string) $sql);
+            
+            if(!empty(mysqli_error(self::getConnection()))){
+                self::setError(mysqli_error(self::getConnection()));
+                return false;
+            }
+
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
+
+			if(is_bool($resource)){
+				self::setError('Não trata-se de um recurso.');
+				return null;
+			}
+
+            return mysqli_fetch_all($resource, MYSQLI_ASSOC);
+        }
+        catch(\Exception $e){
+			self::setError( $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Method query
+     *
+     * @param string $sql [explicite description]
+     *
+     * @return void
+     */
+    public static function query(string $sql)
+    {
+        if(!isset($sql) || empty($sql) || !self::getConnection()){
+            return false;
+        }
+        
+        try{
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
+
+            $resource = mysqli_query(self::getConnection(), (string) $sql);
+            
+            if(!empty(mysqli_error(self::getConnection()))){
+                self::setError(mysqli_error(self::getConnection()));
+                return false;
+            }
+
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
+
+			if(!is_bool($resource)){
+				return null;
+			}
+
+            return $resource;
+        }
+        catch(\Exception $e){
+			self::setError( $e->getMessage());
+            return false;
+        }
+    }
+
+	/**
      * Inicia transação
      * 
      * @return boolean
      */
-    static public function beginTransaction()
+    static public function begin()
     {
 
 		// inicia sessão de transação
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
-        self::setTransaction(mysqli_query (self::getConnection(), 'START TRANSACTION'));
+        mysqli_begin_transaction(self::getConnection());
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
 		
         return true;
 	}
-	
+
     /**
      * Faz commit na transação iniciada
      * @return boolean
      */
-    static public function commitTransaction()
+    static public function commit()
     {
 		// confirma sessão de transação
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
-        self::setTransaction(mysqli_query (self::getConnection(), 'COMMIT'));
+        mysqli_commit(self::getConnection());
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
 		
         return true;
@@ -114,35 +234,15 @@ abstract class conn
      * Faz rollback na transação iniciada
      * @return boolean
      */
-    static public function rollbackTransaction()
+    static public function rollback()
     {
 		// desfaz sessão de transação
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
-        self::setTransaction(mysqli_query (self::getConnection(), 'ROLLBACK'));
+        mysqli_rollback(self::getConnection());
 		mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
 		
         return true;
     }
-
-
-	/**
-	 * Get the value of transaction
-	 */ 
-	static public function getTransaction()
-	{
-		return self::$transaction;
-	}
-
-	/**
-	 * Set the value of transaction
-	 *
-	 * @return  self
-	 */ 
-	static public function setTransaction($transaction)
-	{
-		if(isset($transaction) && !empty($transaction))
-			self::$transaction = $transaction;
-	}
 
 	/**
 	 * Get the value of host
@@ -179,9 +279,9 @@ abstract class conn
 	/**
 	 * Get the value of error
 	 */ 
-	public function getError()
+	public static function getError()
 	{
-		return $this->error;
+		return self::$error;
 	}
 
 	/**
@@ -189,12 +289,10 @@ abstract class conn
 	 *
 	 * @return  self
 	 */ 
-	public function setError($error)
+	public static function setError(string $error)
 	{
 		if(isset($error) && !empty($error)){
-			$this->error[] = $error;
+			self::$error = $error;
 		}
-
-		return $this;
 	}
 }

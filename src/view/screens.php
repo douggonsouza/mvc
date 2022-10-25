@@ -5,12 +5,22 @@ namespace douggonsouza\mvc\view;
 use douggonsouza\mvc\view\mimes;
 use douggonsouza\propertys\propertysInterface;
 use douggonsouza\mvc\view\screensInterface;
+use douggonsouza\mvc\view\attributesInterface;
+use douggonsouza\mvc\view\attributes;
+use douggonsouza\mvc\view\templatesInterface;
 use douggonsouza\benchmarck\benchmarckInterface;
+use douggonsouza\benchmarck\benchmarck;
 
-class screens implements screensInterface
+abstract class screens implements screensInterface
 {
-    protected $benchmarck;
-    protected $page;
+    protected static $propertys;
+    protected static $benchmarck;
+    protected static $attributes;
+    protected static $layout;
+    protected static $page;
+    protected static $templateLayout;
+    protected static $templateBlock;
+    protected static $templatePage;
 
     /**
      * Responde com a inclusão do arquivo
@@ -26,10 +36,16 @@ class screens implements screensInterface
             return 500;
         }
 
-        if(isset($params) && !empty($params)){
-            $params = $params;
-        } 
+        if(isset(self::$attributes)){
+            self::getAttributes()->session();
+        }
 
+        if(isset($params) && !empty($params)){
+            $variables = (array) $params;
+            foreach($variables as $index => $value){
+                $$index = $value;
+            }
+        }
 
         return include($local);
 	}
@@ -101,13 +117,27 @@ class screens implements screensInterface
         if($download)
             header('Content-Disposition: attachment; filename="'.$filename.$ext.'"');
     }
+    
+    /**
+     * Method attributes
+     *
+     * @return object
+     */
+    public static function attributes()
+    {
+        if(!isset(self::$attributes)){
+            self::setAttributes(new attributes());
+        }
+
+        return self::getAttributes();
+    }
 
     /**
      * Get the value of page
      */ 
-    public function getPage()
+    public static function getPage()
     {
-        return $this->page;
+        return self::$page;
     }
 
     /**
@@ -115,13 +145,11 @@ class screens implements screensInterface
      *
      * @return  self
      */ 
-    public function setPage($page)
+    public static function setPage($page)
     {
         if(isset($page) && !empty($page)){
-            $this->page = $page;
+            self::$page = $page;
         }
-
-        return $this;
     }
 
     /**
@@ -129,7 +157,7 @@ class screens implements screensInterface
      */ 
     public function getBenchmarck()
     {
-        return $this->benchmarck;
+        return self::$benchmarck;
     }
 
     /**
@@ -137,13 +165,131 @@ class screens implements screensInterface
      *
      * @return  self
      */ 
-    public function setBenchmarck(benchmarckInterface $benchmarck)
+    public static function setBenchmarck(benchmarck $benchmarck)
     {
         if(isset($benchmarck) && !empty($benchmarck)){
-            $this->benchmarck = $benchmarck;
+            self::$benchmarck = $benchmarck;
         }
+    }
 
-        return $this;
+    /**
+     * Get the value of propertys
+     */ 
+    public function getPropertys()
+    {
+        return self::$propertys;
+    }
+
+    /**
+     * Set the value of propertys
+     *
+     * @return  self
+     */ 
+    public static function setPropertys(propertysInterface $propertys)
+    {
+        if(isset($propertys) && !empty($propertys)){
+            self::$propertys = $propertys;
+        }
+    }
+
+    /**
+     * Get the value of layout
+     */ 
+    public static function getLayout()
+    {
+        return self::$layout;
+    }
+
+    /**
+     * Set the value of layout
+     *
+     * @return  self
+     */ 
+    public static function setLayout($layout)
+    {
+        if(isset($layout) && !empty($layout)){
+            self::$layout = $layout;
+        }
+    }
+
+    /**
+     * Get the value of attributes
+     */ 
+    public static function getAttributes()
+    {
+        return self::$attributes;
+    }
+
+    /**
+     * Set the value of attributes
+     *
+     * @return  self
+     */ 
+    public static function setAttributes(attributesInterface $attributes)
+    {
+        if(isset($attributes) && !empty($attributes)){
+            self::$attributes = $attributes;
+        }
+    }
+
+    /**
+     * Get the value of templateLayout
+     */ 
+    public static function getTemplateLayout()
+    {
+        return self::$templateLayout;
+    }
+
+    /**
+     * Set the value of templateLayout
+     *
+     * @return  void
+     */ 
+    public static function setTemplateLayout(templatesInterface $templateLayout)
+    {
+        if(isset($templateLayout) && !empty($templateLayout)){
+            self::$templateLayout = $templateLayout;
+        }
+    }
+
+    /**
+     * Get the value of templatePage
+     */ 
+    public static function getTemplatePage()
+    {
+        return self::$templatePage;
+    }
+
+    /**
+     * Set the value of templatePage
+     *
+     * @return  void
+     */ 
+    public static function setTemplatePage(templatesInterface $templatePage)
+    {
+        if(isset($templatePage) && !empty($templatePage)){
+            self::$templatePage = $templatePage;
+        }
+    }
+
+    /**
+     * Get the value of templateBlock
+     */ 
+    public static function getTemplateBlock()
+    {
+        return self::$templateBlock;
+    }
+
+    /**
+     * Set the value of templateBlock
+     *
+     * @return  self
+     */ 
+    public static function setTemplateBlock(templatesInterface $templateBlock)
+    {
+        if(isset($templateBlock) && !empty($templateBlock)){
+            self::$templateBlock = $templateBlock;
+        }
     }
 }
 ?>

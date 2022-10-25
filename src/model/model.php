@@ -2,7 +2,9 @@
 
 namespace douggonsouza\mvc\model;
 
-use douggonsouza\mvc\model\resource\resource;
+use douggonsouza\mvc\model\resource\records;
+use douggonsouza\mvc\model\connection\conn;
+use douggonsouza\mvc\model\resource\recordsInterface;
 use douggonsouza\mvc\model\modelInterface;
 use douggonsouza\mvc\model\utils;
 
@@ -15,16 +17,27 @@ class model extends utils implements modelInterface
     protected $records;
     protected $error;
     protected $model = false;
-
+    protected $new = true;
+    
+    /**
+     * Method __construct
+     *
+     * @param int $id [explicite description]
+     * @param string $table [explicite description]
+     * @param string $key [explicite description]
+     *
+     * @return void
+     */
     public function __construct(int $id = null, string $table = null, string $key = null)
     {
         $this->setTable($table);
         $this->setKey($key);
-        $this->setModel(true);
         if(isset($id) && !empty($id)){
             $this->search(array(
                 $this->getKey() => $id
             ));
+            $this->setModel(true);
+            $this->setNew(false);
         }
     }
 
@@ -59,13 +72,11 @@ class model extends utils implements modelInterface
     {
         return array();
     }
-
+   
     /**
-     * Exporta objeto do tipo dicionary
-     * 
-     * @param string $dicionarySQL
-     * 
-     * @return object
+     * Method dicionary - Exporta objeto do tipo dicionary
+     *
+     * @return array
      */
     public function dicionary()
     {
@@ -73,21 +84,15 @@ class model extends utils implements modelInterface
             return null;
         }
 
-        $resource = new resource();
-        $dicionary = $resource->execute($this->getDicionary());
-        if(!isset($dicionary)){
-            $this->setError($resource->getError());
-            return null;
-        }
-        return $dicionary;
+        return $this->queryUncoupled($this->getDicionary());
     }
-
+   
     /**
-     * Exporta objeto do tipo dicionary
-     * 
-     * @param string $dicionarySQL
-     * 
-     * @return object
+     * Method options - Exporta objeto do tipo dicionary
+     *
+     * @param array $where [explicite description]
+     *
+     * @return array
      */
     public function options(array $where = null)
     {
@@ -106,18 +111,13 @@ class model extends utils implements modelInterface
             $lWhere
         );
 
-        $resource = new resource();
-        $options = $resource->execute($sql);
-        if(!isset($options)){
-            $this->setError($resource->getError());
-            return null;
-        }
-        return $options;
+        return $this->queryUncoupled($sql);
     }
-
+    
     /**
-     * Move o ponteiro para o prÃ³ximo
-     * 
+     * Method next - Move o ponteiro para o próximo
+     *
+     * @return bool
      */
     public function next()
     {
@@ -128,9 +128,10 @@ class model extends utils implements modelInterface
         return $this->getRecords()->next();
     }
 
-     /**
-     * Move o ponteiro para o anterior
-     * 
+    /**
+     * Method previous - Move o ponteiro para o anterior
+     *
+     * @return bool
      */
     public function previous()
     {
@@ -140,10 +141,11 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->previous();
     }
-
+   
     /**
-     * Move o ponteiro para o primeiro
-     * 
+     * Method first - Move o ponteiro para o primeiro
+     *
+     * @return void
      */
     public function first()
     {
@@ -153,10 +155,11 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->first();
     }
-
+   
     /**
-     * Move o ponteiro para o Ãºltimo
-     * 
+     * Method last - Move o ponteiro para o último
+     *
+     * @return bool
      */
     public function last()
     {
@@ -166,10 +169,12 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->last();
     }
-
+     
     /**
-     * Get the value of data
-     */ 
+     * Method getData - Colhe o array Data
+     *
+     * @return array
+     */
     public function getData()
     {
         if(empty($this->getRecords())){
@@ -178,10 +183,14 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->getData();
     }
-
+    
     /**
-     * Get the value of data
-     */ 
+     * Method getField - Colhe array com os campos
+     *
+     * @param string $field [explicite description]
+     *
+     * @return array
+     */
     public function getField(string $field)
     {
         if(empty($this->getRecords())){
@@ -192,24 +201,52 @@ class model extends utils implements modelInterface
     }
 
     /**
-     * Preenche um campo com valor
+     * Method setField - Preenche um campo com valor
      *
-     * @param string $field
-     * @param mixed $value
-     * @return bool
+     * @param string $field [explicite description]
+     * @param $value $value [explicite description]
+     *
+     * @return void
      */
     public function setField(string $field, $value)
     {
         if(empty($this->getRecords())){
-            $this->setRecords(new resource());
+            $this->setRecords(new records());
         }
 
         return $this->getRecords()->setField($field, $value);
     }
-
+   
     /**
-     * Get the value of isEof
-     */ 
+     * Method value - Colhe ou Seta o valor do campo
+     *
+     * @param string $field [explicite description]
+     * @param $value $value [explicite description]
+     *
+     * @return mixed
+     */
+    public function value(string $field, $value = null)
+    {
+        if(empty($this->getRecords())){
+            return false;
+        }
+
+        if(!isset($field) || empty($field)){
+            return false;
+        }
+
+        if(isset($value)){
+            return $this->getRecords()->setField($field, $value);
+        }
+
+        return $this->getRecords()->getField($field);
+    }
+    
+    /**
+     * Method isEof - Fim dos registros
+     *
+     * @return void
+     */
     public function isEof()
     {
         if(empty($this->getRecords())){
@@ -218,100 +255,40 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->getIsEof();
     }
-
+   
     /**
-     * Cardinalidade Muitos para um
+     * Method relationship - Colhe os dados do relacionamento
      *
-     * @param object $model
-     * @param string $fieldDestine
-     * @param string $fieldOrigen
-     * @return void
+     * @param modelInterface $model [explicite description]
+     * @param bool $resource [explicite description]
+     *
+     * @return mixed
      */
-    public function manyForOne(object $model, string $fieldDestine, $fieldOrigem = null)
+    public function relationship(modelInterface $model, bool $resource = false)
     {
-        if(!isset($fieldOrigem)){
-            $fieldOrigem = $fieldDestine;
-        }
-
-        if(!isset($model) && empty($model)){
+        if(empty($this->getRecords())){
             return null;
         }
 
-        if(!isset($fieldDestine) && empty($fieldDestine)){
-            return null;
-        }
-
-        $resource = new resource();
-        $sql = sprintf("SELECT DISTINCT
-                %3\$s.*
-            FROM %3\$s
-            JOIN %1\$s ON %1\$s.%2\$s = %3\$s.%4\$s AND %1\$s.active = 1
-            WHERE
-                %1\$s.%2\$s = %5\$s
-                AND %3\$s.active = 1
-            -- GROUP BY
-            --     %3\$s.%4\$s
-            ORDER BY
-                %3\$s.%4\$s;",
-            $this->getTable(),
-            $fieldOrigem,
-            $model->getTable(),
-            $fieldDestine,
-            $this->prepareValueByColumns(
-                $this->type($this->infoColumns($model->getTable(),$fieldOrigem)[0]['Type']),
-                $this->getField($fieldOrigem)
-            )
+        $sql = sprintf(
+            "SELECT t1.*
+            FROM %1\$s t1 
+            JOIN %3\$s t2 ON t2.%2\$s = t1.%2\$s AND t2.active = 'yes'
+            WHERE t2.active = 'yes' AND t2.%4\$s = %5\$d;",
+            $model->getTable(),             // %1\$s
+            $model->getKey(),               // %2\$s
+            $this->getTable(),              // %3\$s
+            $this->getKey(),                // %4\$s
+            $this->value($this->getKey())   // %5\$d
         );
 
-        if(!$resource->query($sql)){
-            $this->setError($resource->getError());
-            return null;
+        if($resource){
+            return conn::select($sql);
         }
 
-        return $resource;
-    }
-    
-    /**
-     * Cardinalidade Muitos para Muitos
-     *
-     * @param object $model
-     * @param string $fieldDestine
-     * @param string $fieldOrigen
-     * @return void
-     */
-    public function manyForMany(object $model, string $fieldDestine, string $fieldOrigem = null)
-    {
-        if(!isset($model) && empty($model)){
-            return null;
-        }
-
-        if(!isset($fieldDestine) && empty($fieldDestine)){
-            return null;
-        }
-
-        if(!isset($fieldOrigem)){
-            $fieldOrigem = $fieldDestine;
-        }
-
-        $resource = new resource();
-        $sql = sprintf("SELECT
-                %3\$s.*
-            FROM %1\$s
-            JOIN %3\$s ON %3\$s.%4\$s = %1\$s.%2\$s
-            ORDER BY
-                %1\$s.%2\$s;",
-            $this->getTable(),
-            $fieldOrigem,
-            $model->getTable(),
-            $fieldDestine,
-        );
-
-        if(!$resource->query($sql)){
-            return null;
-        }
-
-        return $resource;
-    }
+        return conn::selectAsArray($sql);
+        
+    }    
 
     /**
      * Popula o objeto data pelo array
@@ -327,7 +304,7 @@ class model extends utils implements modelInterface
         }
 
         if(empty($this->getRecords())){
-            $this->setRecords(new resource());
+            $this->setRecords(new records());
         }
 
         // array do conteúdo
@@ -339,12 +316,14 @@ class model extends utils implements modelInterface
 
         return $this;
     }
-
+    
     /**
-     * Levanta as informações das columas para a tabela
+     * Method infoColumns - Colhe as informações para as colunas da tabela
      *
-     * @param string $table
-     * @return array
+     * @param string $table [explicite description]
+     * @param $field $field [explicite description]
+     *
+     * @return void
      */
     protected function infoColumns(string $table, $field = null)
     {
@@ -353,24 +332,21 @@ class model extends utils implements modelInterface
         }
 
         if(isset($field)){
-            return $this->execute(
-                sprintf(
-                    "SHOW COLUMNS FROM %s WHERE Field='%s'",
-                    $table,
-                    $field
-                )
-            );
+            return $this->queryUncoupled(sprintf(
+                "SHOW COLUMNS FROM %s WHERE Field='%s'",
+                $table,
+                $field
+            ));
         }
 
-        $sql = sprintf(
+        return $this->queryUncoupled(sprintf(
             'SHOW COLUMNS FROM %s',
             $table
-        );
-        return $this->execute($sql);
+        ));
     }
-
+ 
     /**
-     * Salva os dados do modelo
+     * Method save - Salva os dados do modelo
      *
      * @return bool
      */
@@ -380,7 +356,7 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        $resource = new resource();
+        $records = new records();
 
         $this->validated($this->getData());
 
@@ -399,28 +375,29 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        if(!$resource->query($sql)){
-            $this->setError($resource->getError());
+        if(!$records->query($sql)){
+            $this->setError($records->getError());
             return false;
         }
 
         return true;
     }
-
+   
     /**
-     * Realiza validações antes do salvamento
+     * Method beforeSave - Processamento antes de salvar
      *
-     * @return void
+     * @return bool
      */
     protected function beforeSave()
     {
         return true;
     }
-
+   
     /**
-     * Executa a validação dos campos
-     * 
-     * @param array $data
+     * Method validated - Executa a validação dos campos
+     *
+     * @param $data $data [explicite description]
+     *
      * @return void
      */
     protected function validated($data)
@@ -445,9 +422,10 @@ class model extends utils implements modelInterface
     }
 
     /**
-     * Expõe o total de linha afetadas pela query
+     * Method total - Expõe o total de linha afetadas pela query
+     *
      * @return int
-    */
+     */
     public function total()
     {
         if(empty($this->getRecords())){
@@ -456,11 +434,12 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->total();
     }
-
+   
     /**
-     * Expõe o total de linha afetadas pela query
-     * @return int
-    */
+     * Method exist - O modelo existe
+     *
+     * @return void
+     */
     public function exist()
     {
         if(empty($this->getRecords())){
@@ -469,35 +448,27 @@ class model extends utils implements modelInterface
 
         return $this->getRecords()->exist();
     }
-
+   
     /**
-     * Devolve array associativo de todos os registros
-     * 
-     * @return array|null
+     * Method asAllArray
+     *
+     * @return void
      */
-    public function asArray()
+    public function asAllArray()
     {
         if(empty($this->getRecords())){
             return null;
         }
-        return $this->getRecords()->asArray();
-    }
 
-    /**
-     * Executa uma instruÃ§Ã£o MySQL
-     * 
-     */
-    public function query(string $sql)
-    {
-        if(empty($this->getRecords())){
-            $this->setRecords(new resource());
+        if(!$this->getRecords()->first()){
+            return null;
         }
 
-        return $this->getRecords()->query($sql);
+        return $this->getRecords()->asAllArray();
     }
-
+    
     /**
-     * Salva os dados do modelo
+     * Method delete - Deleta o registro
      *
      * @return bool
      */
@@ -507,7 +478,7 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        $resource = new resource();
+        $records = new records();
 
         $sql = $this->queryForDelete($this->getData());
         if(empty($sql)){
@@ -520,16 +491,16 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        if(!$resource->query($sql)){
-            $this->setError($resource->getError());
+        if(!$records->query($sql)){
+            $this->setError($records->getError());
             return false;
         }
 
         return true;
     }
-
+    
     /**
-     * Validação antes da deleção
+     * Method beforeDelete - Antes da deleção
      *
      * @return void
      */
@@ -537,34 +508,22 @@ class model extends utils implements modelInterface
     {
         return true;
     }
-
+    
     /**
-     * Executa uma instrução MySQL
-     * 
-     */
-    public function execute(string $sql)
-    {
-        if(empty($this->getRecords())){
-            $this->setRecords(new resource());
-        }
-
-        return $this->getRecords()->execute($sql);
-    }
-
-    /**
-     * Carrega a propriedade records com um resource
+     * Method queryUncoupled - Executa uma instrução MySQL desaclopada
+     *
+     * @param string $sql [explicite description]
      *
      * @return void
      */
-    public function records(string $sql = null)
+    public function queryUncoupled(string $sql)
     {
-        $this->records = new resource();
-        if(isset($sql)){
-            $this->records->query($sql);
-            return true;
+        $records = conn::selectAsArray($sql);
+        if(empty($records)){
+            return null;
         }
-        $this->records->query("SELECT * FROM ".$this->getTable().";");
-        return true;
+
+        return $records;
     }
 
     /**
@@ -573,31 +532,34 @@ class model extends utils implements modelInterface
      * @param array $search
      * @return self
      */
-    public function seek(array $search = null)
-    {
-        $this->setRecords(new resource());
-        if(!$this->getRecords()->seek($this->sqlSeek($search))){
-            $this->setError($this->getRecords()->getError());
-            return null;
-        }
+    // public function seek(array $search = null)
+    // {
+    //     $this->setRecords(new records());
+    //     if(!$this->getRecords()->seek($this->sqlSeek($search))){
+    //         $this->setError($this->getRecords()->getError());
+    //         return null;
+    //     }
 
-        return $this;
-    }
-
+    //     return $this;
+    // }
+    
     /**
-     * Busca entre os registros
+     * Method search - Busca entre os registros do banco
      *
-     * @param string $table
+     * @param array $search [explicite description]
+     *
      * @return self
      */
     public function search(array $search)
     {
-        if(empty($this->getTable())){
-            return null;
+        if(!isset($this->table) || empty($this->table)){
+            $this->setError('Não encontrado o nome da tabela.');
+            return false;
         }
 
         if(!isset($search) || empty($search)){
-            return null;
+            $this->setError('Não é permitido parâmetro nulo.');
+            return false;
         }
 
         $content = $this->filterByColumns($search);
@@ -605,24 +567,24 @@ class model extends utils implements modelInterface
             $item = $key.' = '.$item;
         });
 
-        $this->setRecords(new resource());
-        if(!$this->getRecords()->search(
+        $this->setRecords(conn::select(sprintf(
+            "SELECT * FROM %1\$s WHERE %2\$s;",
             $this->getTable(),
-            $content
-        )){
-            $this->setError($this->getRecords()->getError());
-            return null;
-        }
-
-        $this->setModel(true);
+            implode(' AND ', $content)
+        )));
+        
+        // if(!$this->getResource()){
+        //     $this->setError(self::getConn()->error);
+        //     return false;
+        // }
 
         return $this;
     }
-    
+   
     /**
-     * isNew
+     * Method isNew - É novo
      *
-     * @return mixed
+     * @return bool
      */
     public function isNew()
     {
@@ -797,7 +759,7 @@ class model extends utils implements modelInterface
             );
         }
         if(!isset($where)){
-            $this->setError('Não é possível deletar um novo resource.');
+            $this->setError('Não é possível deletar um novo records.');
             return false;
         }
 
@@ -913,8 +875,15 @@ class model extends utils implements modelInterface
     {
         return $this->records;
     }
-
-    protected function setRecords($records)
+    
+    /**
+     * Method setRecords
+     *
+     * @param recordsInterface $records [explicite description]
+     *
+     * @return void
+     */
+    protected function setRecords(recordsInterface $records)
     {
         if(isset($records) && !empty($records)){
             $this->records = $records;
@@ -1011,6 +980,28 @@ class model extends utils implements modelInterface
     {
         if(isset($options) && !empty($options)){
             $this->options = $options;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of new
+     */ 
+    public function getNew()
+    {
+        return $this->new;
+    }
+
+    /**
+     * Set the value of new
+     *
+     * @return  self
+     */ 
+    public function setNew($new)
+    {
+        if(isset($new) && !empty($new)){
+            $this->new = $new;
         }
 
         return $this;
