@@ -498,6 +498,38 @@ class model extends utils implements modelInterface
 
         return true;
     }
+
+    /**
+     * Method softDelete - Inativa o registro
+     *
+     * @return bool
+     */
+    public function softDelete(int $removed = 1)
+    {
+        if(empty($this->getRecords())){
+            return false;
+        }
+
+        $records = new records();
+
+        $sql = $this->queryForSoftDelete($this->getData(), $removed);
+        if(empty($sql)){
+            $this->setError('Erro na geração da query de deleção.');
+            return false;
+        }
+
+        if(!$this->beforeDelete()){
+            $this->setError('Erro na validação antes da deleção.');
+            return false;
+        }
+
+        if(!$records->query($sql)){
+            $this->setError($records->getError());
+            return false;
+        }
+
+        return true;
+    }
     
     /**
      * Method beforeDelete - Antes da deleção
@@ -731,7 +763,7 @@ class model extends utils implements modelInterface
     }
 
     /**
-     * Cria query de Save
+     * Cria query de Deleção
      *
      * @param array $data
      * @return string
@@ -767,6 +799,45 @@ class model extends utils implements modelInterface
         $sql = sprintf(
             "DELETE FROM %1\$s WHERE %2\$s;",
             $this->getTable(),
+            $where
+        );
+        return $sql;
+    }
+    
+    /**
+     * Method queryForSoftDelete - Cria query de inativação
+     *
+     * @param array $data
+     * @param int $removed
+     *
+     * @return string
+     */
+    public function queryForSoftDelete(array $data, int $removed = 1)
+    {
+        if(!isset($data) || empty($data)){
+            $this->setError('Nâo é permitido parâmetro data nulo.');
+            return false;
+        }
+
+        // existe id
+        $where = null;
+        $infoKey = $this->infoColumns($this->getTable(),$this->getKey());
+        if(isset($data[$infoKey['Field']])){
+            $where = $infoKey['Field'].' = '.$this->prepareValueByColumns(
+                $this->type($infoKey['Type']),
+                $data[$infoKey['Field']]
+            );
+        }
+        if(!isset($where)){
+            $this->setError('Não é possível deletar um novo records.');
+            return false;
+        }
+
+        // update
+        $sql = sprintf(
+            "UPDATE FROM %1\$s SET active='no',removed=%2\$d WHERE %3\$s;",
+            $this->getTable(),
+            $removed,
             $where
         );
         return $sql;
