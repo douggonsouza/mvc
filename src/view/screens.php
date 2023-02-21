@@ -8,8 +8,6 @@ use douggonsouza\mvc\view\screensInterface;
 use douggonsouza\mvc\view\attributesInterface;
 use douggonsouza\mvc\view\attributes;
 use douggonsouza\mvc\view\templatesInterface;
-use douggonsouza\benchmarck\benchmarckInterface;
-use douggonsouza\benchmarck\benchmarck;
 
 abstract class screens implements screensInterface
 {
@@ -64,6 +62,43 @@ abstract class screens implements screensInterface
         }
 
         return 500;
+    }
+
+    /**
+    * Carrega o local da identificação da requisição
+    *
+    * @param string                  $identify
+    * @param behaviorInterface       $config
+    * @param propertysInterface|null $params
+    * 
+    * @return void
+    * 
+    */
+    public function identified(string $identify, propertysInterface $params = null, string $layout = null)
+    {
+        if(isset($params)){
+            $this->setPropertys($params);
+        }
+
+        $this->identifyLayout($layout);
+        $this->setPage($this->getBenchmarck()->identified($identify));
+
+        $this->body($this->getLayout(), $this->getPropertys());
+        return;
+    }
+
+    /**
+     * Set the value of identifyLayout
+     *
+     * @return  self
+     */ 
+    public function identifyLayout(string $identifyLayout = null)
+    {
+        if(isset($identifyLayout) && !empty($identifyLayout)){
+            $this->setLayout($this->getBenchmarck()->identified($identifyLayout));
+        }
+
+        return $this;
     }
 
     /**
@@ -165,7 +200,7 @@ abstract class screens implements screensInterface
      *
      * @return  self
      */ 
-    public static function setBenchmarck(benchmarck $benchmarck)
+    public static function setBenchmarck($benchmarck)
     {
         if(isset($benchmarck) && !empty($benchmarck)){
             self::$benchmarck = $benchmarck;

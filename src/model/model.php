@@ -28,14 +28,24 @@ class model extends utils implements modelInterface
      *
      * @return void
      */
-    public function __construct(int $id = null, string $table = null, string $key = null)
+    public function __construct($id = null, string $table = null, string $key = null)
     {
         $this->setTable($table);
         $this->setKey($key);
         if(isset($id) && !empty($id)){
-            $this->search(array(
-                $this->getKey() => $id
-            ));
+
+            // for int
+            if(is_int($id)){
+                $this->search(array(
+                    $this->getKey() => $id
+                ));
+            }
+
+            // for array
+            if(is_array($id)){
+                $this->search($id);
+            }
+
             $this->setModel(true);
             $this->setNew(false);
         }
@@ -599,16 +609,24 @@ class model extends utils implements modelInterface
             $item = $key.' = '.$item;
         });
 
-        $this->setRecords(conn::select(sprintf(
-            "SELECT * FROM %1\$s WHERE %2\$s;",
+        if(!isset($content) || empty($content)){
+            return false;
+        }
+
+        $sql = sprintf(
+            "SELECT * FROM %1\$s WHERE active = 'yes' AND %2\$s;",
             $this->getTable(),
             implode(' AND ', $content)
-        )));
+        );
+
+        $records = conn::select($sql);
+        if(!$records){ return false;}
+        $this->setRecords($records);
         
-        // if(!$this->getResource()){
-        //     $this->setError(self::getConn()->error);
-        //     return false;
-        // }
+        if(!conn::getError()){
+            $this->setError(conn::getError());
+            return false;
+        }
 
         return $this;
     }
@@ -620,10 +638,7 @@ class model extends utils implements modelInterface
      */
     public function isNew()
     {
-        if(empty($this->getRecords())){
-            return null;
-        }
-        return $this->getRecords()->getNew();
+        return $this->getRecords()->total();
     }
 
     /**
@@ -1071,7 +1086,7 @@ class model extends utils implements modelInterface
      */ 
     public function setNew($new)
     {
-        if(isset($new) && !empty($new)){
+        if(isset($new)){
             $this->new = $new;
         }
 

@@ -5,6 +5,7 @@ namespace douggonsouza\mvc\view;
 use douggonsouza\benchmarck\behaviorInterface;
 use douggonsouza\mvc\view\display;
 use douggonsouza\propertys\propertysInterface;
+use douggonsouza\benchmarck\benchmarckInterface;
 use douggonsouza\benchmarck\identify;
 
 class view extends display
@@ -46,9 +47,9 @@ class view extends display
     * @return void
     * 
     */
-    final public function benchmarck($benchmarck)
+    public static function benchmarck(benchmarckInterface $benchmarck)
     {
-        $this->setBenchmarck($benchmarck);
+        self::setBenchmarck($benchmarck);
     }
 
     /**
@@ -220,7 +221,7 @@ class view extends display
      *
      * @return  self
      */ 
-    public function setBenchmarck($benchmarck)
+    public function setBenchmarck(benchmarckInterface $benchmarck)
     {
         if(isset($benchmarck) && !empty($benchmarck)){
             $this->benchmarck = $benchmarck;
