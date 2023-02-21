@@ -16,7 +16,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "douggonsouza/propertys": "^1.0.0",
-        "douggonsouza/benchmarck": "^1.0.0"
+        "douggonsouza/propertys": "^1.0.0"
     }
 }

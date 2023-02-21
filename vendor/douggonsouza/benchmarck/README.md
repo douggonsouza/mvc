@@ -1,2 +1,0 @@
-# benchmarck
-Págnas de referência

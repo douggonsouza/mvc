@@ -7,16 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'douggonsouza\\benchmarck\\alerts' => $vendorDir . '/douggonsouza/benchmarck/src/alerts.php',
-    'douggonsouza\\benchmarck\\alertsInterface' => $vendorDir . '/douggonsouza/benchmarck/src/alertsInterface.php',
-    'douggonsouza\\benchmarck\\assets\\assets' => $vendorDir . '/douggonsouza/benchmarck/src/assets/assets.php',
-    'douggonsouza\\benchmarck\\behaviorInterface' => $vendorDir . '/douggonsouza/benchmarck/src/behaviorInterface.php',
-    'douggonsouza\\benchmarck\\benchmarck' => $vendorDir . '/douggonsouza/benchmarck/src/benchmarck.php',
-    'douggonsouza\\benchmarck\\benchmarckInterface' => $vendorDir . '/douggonsouza/benchmarck/src/benchmarckInterface.php',
-    'douggonsouza\\benchmarck\\blocks\\blocks' => $vendorDir . '/douggonsouza/benchmarck/src/blocks/blocks.php',
-    'douggonsouza\\benchmarck\\identify' => $vendorDir . '/douggonsouza/benchmarck/src/identify.php',
-    'douggonsouza\\language\\language' => $vendorDir . '/douggonsouza/language/src/language.php',
-    'douggonsouza\\language\\languageInterface' => $vendorDir . '/douggonsouza/language/src/languageInterface.php',
     'douggonsouza\\mvc\\control\\act' => $baseDir . '/src/control/act.php',
     'douggonsouza\\mvc\\control\\actInterface' => $baseDir . '/src/control/actInterface.php',
     'douggonsouza\\mvc\\control\\controllers' => $baseDir . '/src/control/controllers.php',

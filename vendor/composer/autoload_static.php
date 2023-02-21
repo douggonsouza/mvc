@@ -11,8 +11,6 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
         array (
             'douggonsouza\\propertys\\' => 23,
             'douggonsouza\\mvc\\' => 17,
-            'douggonsouza\\language\\' => 22,
-            'douggonsouza\\benchmarck\\' => 24,
         ),
     );
 
@@ -25,28 +23,10 @@ class ComposerStaticInit80e6afd09195ba30855030970ddea808
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'douggonsouza\\language\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/douggonsouza/language/src',
-        ),
-        'douggonsouza\\benchmarck\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/douggonsouza/benchmarck/src',
-        ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'douggonsouza\\benchmarck\\alerts' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/alerts.php',
-        'douggonsouza\\benchmarck\\alertsInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/alertsInterface.php',
-        'douggonsouza\\benchmarck\\assets\\assets' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/assets/assets.php',
-        'douggonsouza\\benchmarck\\behaviorInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/behaviorInterface.php',
-        'douggonsouza\\benchmarck\\benchmarck' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/benchmarck.php',
-        'douggonsouza\\benchmarck\\benchmarckInterface' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/benchmarckInterface.php',
-        'douggonsouza\\benchmarck\\blocks\\blocks' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/blocks/blocks.php',
-        'douggonsouza\\benchmarck\\identify' => __DIR__ . '/..' . '/douggonsouza/benchmarck/src/identify.php',
-        'douggonsouza\\language\\language' => __DIR__ . '/..' . '/douggonsouza/language/src/language.php',
-        'douggonsouza\\language\\languageInterface' => __DIR__ . '/..' . '/douggonsouza/language/src/languageInterface.php',
         'douggonsouza\\mvc\\control\\act' => __DIR__ . '/../..' . '/src/control/act.php',
         'douggonsouza\\mvc\\control\\actInterface' => __DIR__ . '/../..' . '/src/control/actInterface.php',
         'douggonsouza\\mvc\\control\\controllers' => __DIR__ . '/../..' . '/src/control/controllers.php',
