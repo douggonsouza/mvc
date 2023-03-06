@@ -1,0 +1,96 @@
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+    use douggonsouza\logged\logged;
+    use douggonsouza\logged\models\user;
+    use douggonsouza\discovery\models\accessPage;
+    use douggonsouza\propertys\propertys;
+
+    $perfil = (new user())->perfil(logged::getId());
+    if(isset($perfil)){
+        $aPages = (new accessPage())->pages($perfil->access_id);
+    }
+?>
+        <!-- MENU SIDEBAR -->
+		<aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo">
+                <a href="#">
+                    <img src="<?= router::assets("/images/icon/logo.png", assets::ABSOLUTE_URL) ?>" alt="Cool Admin" />
+                </a>
+            </div>
+
+                <!-- <div class="menu-sidebar__content js-scrollbar1" id="sidebar">
+                        <ul class="nav flex-column flex-nowrap overflow-hidden">
+                            <li class="nav-item">
+                                <a class="nav-link text-truncate" href="#"><i class="fa fa-home"></i> <span class="d-none d-sm-inline">Overview</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link collapsed text-truncate" href="#submenu1" data-toggle="collapse" data-target="#submenu1"><i class="fa fa-table"></i> <span class="d-none d-sm-inline">Reports</span></a>
+                                <div class="collapse" id="submenu1" aria-expanded="false">
+                                    <ul class="flex-column pl-2 nav">
+                                        <li class="nav-item"><a class="nav-link py-0" href="#"><span>Orders</span></a></li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-truncate collapsed py-1" href="#submenu1sub1" data-toggle="collapse" data-target="#submenu1sub1"><span>Customers</span></a>
+                                            <div class="collapse" id="submenu1sub1" aria-expanded="false">
+                                                <ul class="flex-column nav pl-4">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link p-1 text-truncate" href="#">
+                                                            <i class="fa fa-fw fa-clock-o"></i> Daily </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link p-1 text-truncate" href="#">
+                                                            <i class="fa fa-fw fa-dashboard"></i> Dashboard </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link p-1 text-truncate" href="#">
+                                                            <i class="fa fa-fw fa-bar-chart"></i> Charts </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link p-1 text-truncate" href="#">
+                                                            <i class="fa fa-fw fa-compass"></i> Areas </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a class="nav-link text-truncate" href="#"><i class="fa fa-bar-chart"></i> <span class="d-none d-sm-inline">Analytics</span></a></li>
+                            <li class="nav-item"><a class="nav-link text-truncate" href="#"><i class="fa fa-download"></i> <span class="d-none d-sm-inline">Export</span></a></li>
+                        </ul>
+                </div> -->
+
+            <div class="menu-sidebar__content js-scrollbar1" id="sidebar">
+                <ul class="nav flex-column flex-nowrap overflow-hidden">
+                    <?php
+                        $count = 0;
+                        $stepOne = '';
+                        foreach($aPages as $page){
+                            if($page['stepOneShowName'] != $stepOne){
+                                echo('
+                                <li class="nav-item">
+                                    <a class="nav-link collapsed text-truncate" href="#submenu' . $count . '" data-toggle="collapse" data-target="#submenu' . $count . '"><i class="' . $page['icon'] . '"></i> <span class="d-none d-sm-inline">' . router::label($page['stepOneShowName']) . '</span></a>
+                                    <div class="collapse" id="submenu' . $count . '" aria-expanded="false">
+                                        <ul class="flex-column pl-2 nav">');
+                            }
+                        
+                                            echo('
+                                            <li class="nav-item">
+                                                <a class="nav-link p-1 text-truncate" href="'. router::getUsages()->getHost(). $page['url'] . '">' . router::label($page['showName']) . '</a>
+                                            </li>
+                                            ');
+                            
+                            $stepOne = $page['stepOneShowName'];
+                            if($page['stepOneShowName'] != $stepOne){
+                                echo('
+                                        <\ul>
+                                    <\div>
+                                </li>
+                            ');
+                            }
+                            $count++;
+                        }
+                    ?>
+                </ul>
+            </div>
+        </aside>

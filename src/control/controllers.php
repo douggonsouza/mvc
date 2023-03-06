@@ -15,7 +15,7 @@ class controllers extends screens implements controllersInterface
      * @param array $info
      * @return void
      */
-    public function main(propertysInterface $infos)
+    public function main(propertysInterface $infos = null)
     {
         return self::view('', $infos);
     }
@@ -28,7 +28,7 @@ class controllers extends screens implements controllersInterface
      *
      * @return void
      */
-    public static function view(string $template, propertysInterface $params = null)
+    public static function view(string $template = null, propertysInterface $params = null)
     {
         return views::view($template, $params);
     }

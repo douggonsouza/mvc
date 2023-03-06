@@ -19,7 +19,7 @@ interface actInterface
      * @param array $info
      * @return void
      */
-    public function main(propertysInterface $infos);
+    public function main(propertysInterface $infos = null);
 }
 
 ?>

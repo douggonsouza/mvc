@@ -1,0 +1,19 @@
+{
+    "name": "douggonsouza/propertys",
+    "description": "Armazenagem das propriedades",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "douggonsouza\\propertys\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Douglas Gonçalves de Souza",
+            "email": "douggonsouza@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

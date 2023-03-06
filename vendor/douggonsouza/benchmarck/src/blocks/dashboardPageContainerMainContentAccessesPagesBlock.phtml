@@ -1,0 +1,151 @@
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+    use douggonsouza\discovery\models\page;
+    use douggonsouza\discovery\models\access;
+
+    $optionsPage = (new page())->options();
+    $optionsAccess = (new access())->options();
+?>
+                <!-- BLOCO -->
+
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                    <!-- BLOCO -->
+                                    <!-- dashboard1PageContainerBreakcrumb -->
+                                    <!-- BREADCRUMB-->
+
+                                    <?php
+                                        router::identify('dashboardPageContainerBreakcrumbBlock', $params);
+                                    ?>
+                                    
+                                    <!-- BLOCO -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- END BREADCRUMB-->
+
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body card-block">
+                                        <div class="col-md-12">
+                                            <div class="overview-wrap">
+                                                <button class="au-btn au-btn-icon au-btn--blue">
+                                                    <?= router::label('add'); ?>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body card-block">
+                                        <div class="col-md-12">
+                                            <div class="overview-wrap">
+                                                <h2 class="title-1"><?= router::label('access_pages'); ?></h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body card-block">
+                                        <form action="" method="post">
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-12 col-md-3">
+                                                            <label for="access_id" class=" form-control-label"><?= router::label('accesses'); ?></label>
+                                                        </div>
+                                                        <div class="col-12 col-md-9">
+                                                            <select name="access_id" id="access_id" class="form-control">
+                                                                <option value=""></option>
+                                                                <?php
+                                                                    foreach($optionsAccess as $option){
+                                                                        print('<option value="' . $option['value'] . '">'. $option['label'] .'</option>');
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-12 col-md-3">
+                                                            <label for="page_id" class=" form-control-label"><?= router::label('pages'); ?></label>
+                                                        </div>
+                                                        <div class="col-12 col-md-9">
+                                                            <select name="page_id" id="page_id" multiple class="form-control" size="10">
+                                                                <?php
+                                                                    foreach($optionsPage as $option){
+                                                                        print('<option value="' . $option['value'] . '">'. $option['label'] .'</option>');
+                                                                    }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <div class="col-md-12">
+                                                    <input type="hidden" name="pub_key" value="UMOhZ2luYXMgRG8gQWNlc3Nv">
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-dot-circle-o"></i> <?= router::label('submit'); ?>
+                                                    </button>
+                                                    <button type="reset" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-ban"></i> <?= router::label('reset'); ?>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <script>
+                    $('#access_id').change(function() {
+                        var url = '<?= router::getUsages()->getHost(); ?>' + '/api/pagesofaccess/' + $('#access_id').val() + '/json/';
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            dataType: "json",
+                            success: function( data ) {
+                                // limpa seleções
+                                var slc = $('#page_id option');
+                                slc.each(function(index, elem) {
+                                    elem.selected = false;
+                                });
+
+                                // renova seleções
+                                var slc = $('#page_id option');
+                                slc.each(function(index, elem) {
+                                    $.each(data,function(idx, item){
+                                        if (item['page_id'] == elem.value){
+                                            elem.selected = true;
+                                        }
+                                    });
+                                });
+                            },
+                            error: function( jqXHR, textStatus, errorThrown ){
+                                alert(errorThrown);
+                            }
+                        });
+                    });
+                </script>

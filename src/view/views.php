@@ -45,9 +45,10 @@ abstract class views extends screens implements viewsInterface
             parent::setPropertys($params);
         }
 
-        self::setTemplateBlock(
-            new templates(self::getBenchmarck()->identified($template), 'block')
-        );
+        // define local block
+        if(!self::local($template, 'block')){
+            throw new \Exception("Erro durante o carregamento do template");
+        }
 
         return parent::body(self::getTemplateBLock()->getTemplate(), self::getPropertys());
     }
@@ -62,23 +63,23 @@ abstract class views extends screens implements viewsInterface
     * @return void
     * 
     */
-    public static function view(string $template, propertysInterface $params = null)
+    public static function view(string $template = null, propertysInterface $params = null, string $layout = null)
     {
-        if(is_null(self::getLayout())){
-            throw new \Exception('Não identificado o layout.');
+        // page
+        if(isset($template) && !empty($template)){
+            self::setPage(($template));
+            self::local(self::getPage());
         }
 
         if(isset($params)){
             parent::setPropertys($params);
         }
-        self::setPage(self::getBenchmarck()->identified($template));
 
-        self::setTemplateLayout(
-            new templates(self::getBenchmarck()->identified(self::getLayout()), 'layout')
-        );
-        self::setTemplatePage(
-            new templates(self::getBenchmarck()->identified($template), 'page')
-        );
+        // layout
+        if(isset($layout) && !empty($layout)){
+            self::setLayout($layout);
+        }
+        self::local(self::getLayout(), 'layout');
 
         return parent::body(self::getTemplateLayout()->getTemplate(), self::getPropertys());
     }

@@ -1,0 +1,106 @@
+<?php
+    use douggonsouza\routes\router;
+    use douggonsouza\benchmarck\assets\assets;
+    use douggonsouza\logged\logged;
+    use douggonsouza\logged\models\user;
+    use douggonsouza\propertys\propertys;
+
+    $user = new user();
+    $user->search(array('user_id' => logged::getId()));
+    $perfil = $user->perfil();
+    if(!isset($perfil)){
+        $perfil = new propertys();
+    }
+?>
+                <!-- BLOCO -->
+
+                <section>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <!-- BLOCO -->
+                                    <!-- dashboard1PageContainerBreakcrumb -->
+                                    <!-- BREADCRUMB-->
+
+                                    <?php
+                                        router::identify('dashboard1PageContainerBreakcrumbBlock', $params);
+                                    ?>
+                                    
+                                    <!-- BLOCO -->
+
+                                </div>
+                            </div>
+                        </div>
+                </section>
+
+                <!-- END BREADCRUMB-->
+
+                <section>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body card-block">
+                                                <div class="col-md-12">
+                                                    <div class="overview-wrap">
+                                                        <button class="au-btn au-btn-icon au-btn--blue">
+                                                            <?= router::label('add'); ?>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body card-block">
+                                                <div class="col-md-12">
+                                                    <div class="overview-wrap">
+                                                        <h2 class="title-1"><?= router::label('title_perfil'); ?></h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body card-block">
+                                                    <div class="form-group">
+                                                        <label for="name" class=" form-control-label"><strong><?= router::label('name'); ?></strong></label>
+                                                        <p><?= isset($perfil->name)? $perfil->name: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="document" class=" form-control-label"><strong><?= router::label('document'); ?></strong></label>
+                                                        <p id="document"><?= isset($perfil->document)? $perfil->document: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email" class=" form-control-label"><strong><?= router::label('email'); ?></strong></label>
+                                                        <p id="email"><?= isset($perfil->email)? $perfil->email: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="birthday" class=" form-control-label"><strong><?= router::label('birthday'); ?></strong></label>
+                                                        <p id="birthday"><?= isset($perfil->birthday)? $perfil->birthday: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="genre" class=" form-control-label"><strong><?= router::label('genre'); ?></strong></label>
+                                                        <p id="genre"><?= isset($perfil->genre)? $perfil->genre: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="school" class=" form-control-label"><strong><?= router::label('school'); ?></strong></label>
+                                                        <p id="school"><?= isset($perfil->school)? $perfil->school: null; ?></p>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="office" class=" form-control-label"><strong><?= router::label('office'); ?></strong></label>
+                                                        <p id="office"><?= isset($perfil->office)? $perfil->office: null; ?></p>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                            

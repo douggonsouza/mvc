@@ -1,0 +1,15 @@
+/* CSS */
+
+.nav-item {
+    margin-top: 9px;
+    margin-left: 18px;
+}
+.nav-link[data-toggle].collapsed:after {
+    content: " ▾";
+}
+.nav-link[data-toggle]:not(.collapsed):after {
+    content: " ▴";
+}
+.nav-link {
+    color: #4b4a4a;
+}

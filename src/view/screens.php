@@ -41,7 +41,7 @@ abstract class screens implements screensInterface
         if(isset($params) && !empty($params)){
             $variables = (array) $params;
             foreach($variables as $index => $value){
-                $$index = $value;
+                ${$index} = $value;
             }
         }
 
@@ -77,28 +77,23 @@ abstract class screens implements screensInterface
     public function identified(string $identify, propertysInterface $params = null, string $layout = null)
     {
         if(isset($params)){
-            $this->setPropertys($params);
+            self::setPropertys($params);
         }
 
-        $this->identifyLayout($layout);
-        $this->setPage($this->getBenchmarck()->identified($identify));
+        // define local layout
+        if(isset($layout) && !empty($layout)){
+            if(!self::local($layout, 'layout')){
+                throw new \Exception("Erro durante o carregamento do template de layout");
+            }
+        }
 
-        $this->body($this->getLayout(), $this->getPropertys());
+        // define local page
+        if(!self::local($identify)){
+            throw new \Exception("Erro durante o carregamento do template da página");
+        }
+
+        $this->body(self::getTemplateLayout()->getTemplate(), $this->getPropertys());
         return;
-    }
-
-    /**
-     * Set the value of identifyLayout
-     *
-     * @return  self
-     */ 
-    public function identifyLayout(string $identifyLayout = null)
-    {
-        if(isset($identifyLayout) && !empty($identifyLayout)){
-            $this->setLayout($this->getBenchmarck()->identified($identifyLayout));
-        }
-
-        return $this;
     }
 
     /**
@@ -151,6 +146,66 @@ abstract class screens implements screensInterface
         }
         if($download)
             header('Content-Disposition: attachment; filename="'.$filename.$ext.'"');
+    }
+
+    /**
+     * Method local
+     *
+     * @param string $template 
+     * @param string $type 
+     *
+     * @return bool
+     */
+    protected static function local(string $template, string $type = 'page')
+    {
+        if(!isset($template) || empty($template)){
+            throw new \Exception("Template não informado.");
+        }
+
+        // define local block
+        switch($type){
+            case 'block':
+                $tmplt = self::getBenchmarck()->identified($template);
+                if(!isset($tmplt) || empty($tmplt)){
+                    $tmplt = $template;
+                }
+                self::setTemplateBlock(
+                    new templates($tmplt, 'block')
+                );
+                break;
+            case 'page':
+                $tmplt = self::getBenchmarck()->identified($template);
+                if(!isset($tmplt) || empty($tmplt)){
+                    $tmplt = $template;
+                }
+                self::setPage($tmplt);
+                self::setTemplatePage(
+                    new templates(self::getPage(), 'page')
+                );
+                break;
+            case 'layout':
+                $tmplt = self::getBenchmarck()->identified($template);
+                if(!isset($tmplt) || empty($tmplt)){
+                    $tmplt = $template;
+                }
+                self::setLayout($tmplt);
+                self::setTemplateLayout(
+                    new templates(self::getLayout(), 'layout')
+                );
+                break;
+            default:
+                $tmplt = self::getBenchmarck()->identified($template);
+                if(!isset($tmplt) || empty($tmplt)){
+                    $tmplt = $template;
+                }
+                self::setPage($tmplt);
+                self::setTemplatePage(
+                    new templates(self::getPage(), 'page')
+                );
+                break;
+        }
+
+        return true;
     }
     
     /**
