@@ -3,7 +3,7 @@
         'name' => 'douggonsouza/mvc',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4b92d489e227c7965eb1fa42aefee1f7f6e207bb',
+        'reference' => '08f2ffcd878d2f13a8c0a410062898f9433b48c7',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'douggonsouza/mvc' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4b92d489e227c7965eb1fa42aefee1f7f6e207bb',
+            'reference' => '08f2ffcd878d2f13a8c0a410062898f9433b48c7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
