@@ -43,7 +43,7 @@ abstract class act extends exiting implements actInterface
     public function view(string $view, propertysInterface $info = null, string $layout = null)
     {
         if(isset($info)){
-            $this->setPropertys($info);
+            $this->setParams($info);
         }
 
         if(isset($layout)){
@@ -60,7 +60,7 @@ abstract class act extends exiting implements actInterface
             $this->setPage($view);
         }
 
-        parent::body($this->getLayout(), $this->getPropertys());
+        parent::body($this->getLayout(), $this->getParams());
         return;
     }
 }

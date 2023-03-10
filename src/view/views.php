@@ -42,7 +42,7 @@ abstract class views extends screens implements viewsInterface
     public static function block(string $template, propertysInterface $params = null)
     {
         if(isset($params)){
-            parent::setPropertys($params);
+            parent::setParams($params);
         }
 
         // define local block
@@ -50,7 +50,7 @@ abstract class views extends screens implements viewsInterface
             throw new \Exception("Erro durante o carregamento do template");
         }
 
-        return parent::body(self::getTemplateBLock()->getTemplate(), self::getPropertys());
+        return parent::body(self::getTemplateBLock()->getTemplate(), self::getParams());
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class views extends screens implements viewsInterface
         }
 
         if(isset($params)){
-            parent::setPropertys($params);
+            parent::setParams($params);
         }
 
         // layout
@@ -81,7 +81,7 @@ abstract class views extends screens implements viewsInterface
         }
         self::local(self::getLayout(), 'layout');
 
-        return parent::body(self::getTemplateLayout()->getTemplate(), self::getPropertys());
+        return parent::body(self::getTemplateLayout()->getTemplate(), self::getParams());
     }
 
     /**

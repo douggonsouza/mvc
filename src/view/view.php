@@ -30,12 +30,12 @@ class view extends display
     final public function layout(string $layout, propertysInterface $params)
     {
         if(isset($params)){
-            $this->setPropertys($params);
+            $this->setParams($params);
         }
 
         $this->setLayout($this->getBenchmarck()->layouts($layout));
 
-        parent::body($this->getLayout(), $this->getPropertys());
+        parent::body($this->getLayout(), $this->getParams());
         return;
     }
 
@@ -64,12 +64,12 @@ class view extends display
     final public function block(string $block, propertysInterface $params = null)
     {
         if(isset($params)){
-            $this->setPropertys($params);
+            $this->setParams($params);
         }
 
         $this->setBlock($this->getBenchmarck()->blocks($block));
 
-        parent::body($this->getBlock(), $this->getPropertys());
+        parent::body($this->getBlock(), $this->getParams());
         return;
     }
 
@@ -85,12 +85,12 @@ class view extends display
     final public function page(string $page, propertysInterface $params = null)
     {
         if(isset($params)){
-            $this->setPropertys($params);
+            $this->setParams($params);
         }
 
         $this->setPage($page);
 
-        parent::body($this->getPage(), $this->getPropertys());
+        parent::body($this->getPage(), $this->getParams());
         return;
     }
     
@@ -126,13 +126,13 @@ class view extends display
     final public function identified(string $identify, propertysInterface $params = null, string $layout = null)
     {
         if(isset($params)){
-            $this->setPropertys($params);
+            $this->setParams($params);
         }
 
         $this->identifyLayout($layout);
         $this->setPage($this->getBenchmarck()->identified($identify));
 
-        parent::body($this->getLayout(), $this->getPropertys());
+        parent::body($this->getLayout(), $this->getParams());
         return;
     }
 
@@ -182,28 +182,6 @@ class view extends display
         if(isset($file) && !empty($file)){
         $this->file = $file;
         }
-        return $this;
-    }
-
-    /**
-     * Get the value of propertys
-     */ 
-    public function getPropertys()
-    {
-        return $this->propertys;
-    }
-
-    /**
-     * Set the value of propertys
-     *
-     * @return  self
-     */ 
-    public function setPropertys(propertysInterface $propertys)
-    {
-        if(isset($propertys) && !empty($propertys)){
-            $this->propertys = $propertys;
-        }
-
         return $this;
     }
 

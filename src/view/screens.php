@@ -3,6 +3,7 @@
 namespace douggonsouza\mvc\view;
 
 use douggonsouza\mvc\view\mimes;
+use douggonsouza\propertys\propertys;
 use douggonsouza\propertys\propertysInterface;
 use douggonsouza\mvc\view\screensInterface;
 use douggonsouza\mvc\view\attributesInterface;
@@ -13,7 +14,7 @@ abstract class screens implements screensInterface
 {
     protected static $propertys;
     protected static $benchmarck;
-    protected static $attributes;
+    protected static $params;
     protected static $layout;
     protected static $page;
     protected static $templateLayout;
@@ -34,12 +35,12 @@ abstract class screens implements screensInterface
             return 500;
         }
 
-        if(isset(self::$attributes)){
-            self::getAttributes()->session();
+        if(isset($params)){
+            self::setParams($params);
         }
 
-        if(isset($params) && !empty($params)){
-            $variables = (array) $params;
+        if(self::getParams()->exist()){
+            $variables = self::getParams()->toArray();
             foreach($variables as $index => $value){
                 ${$index} = $value;
             }
@@ -77,7 +78,7 @@ abstract class screens implements screensInterface
     public function identified(string $identify, propertysInterface $params = null, string $layout = null)
     {
         if(isset($params)){
-            self::setPropertys($params);
+            self::setParams($params);
         }
 
         // define local layout
@@ -92,7 +93,7 @@ abstract class screens implements screensInterface
             throw new \Exception("Erro durante o carregamento do template da página");
         }
 
-        $this->body(self::getTemplateLayout()->getTemplate(), $this->getPropertys());
+        $this->body(self::getTemplateLayout()->getTemplate(), $this->getParams());
         return;
     }
 
@@ -213,13 +214,13 @@ abstract class screens implements screensInterface
      *
      * @return object
      */
-    public static function attributes()
+    public static function attributes(string $name, $value)
     {
-        if(!isset(self::$attributes)){
-            self::setAttributes(new attributes());
+        if(isset($value) && !empty($value)){
+            self::setParams(new propertys(array($name => $value)));
         }
 
-        return self::getAttributes();
+        return true;
     }
 
     /**
@@ -263,26 +264,6 @@ abstract class screens implements screensInterface
     }
 
     /**
-     * Get the value of propertys
-     */ 
-    public function getPropertys()
-    {
-        return self::$propertys;
-    }
-
-    /**
-     * Set the value of propertys
-     *
-     * @return  self
-     */ 
-    public static function setPropertys(propertysInterface $propertys)
-    {
-        if(isset($propertys) && !empty($propertys)){
-            self::$propertys = $propertys;
-        }
-    }
-
-    /**
      * Get the value of layout
      */ 
     public static function getLayout()
@@ -299,26 +280,6 @@ abstract class screens implements screensInterface
     {
         if(isset($layout) && !empty($layout)){
             self::$layout = $layout;
-        }
-    }
-
-    /**
-     * Get the value of attributes
-     */ 
-    public static function getAttributes()
-    {
-        return self::$attributes;
-    }
-
-    /**
-     * Set the value of attributes
-     *
-     * @return  self
-     */ 
-    public static function setAttributes(attributesInterface $attributes)
-    {
-        if(isset($attributes) && !empty($attributes)){
-            self::$attributes = $attributes;
         }
     }
 
@@ -379,6 +340,30 @@ abstract class screens implements screensInterface
     {
         if(isset($templateBlock) && !empty($templateBlock)){
             self::$templateBlock = $templateBlock;
+        }
+    }
+
+    /**
+     * Get the value of params
+     */ 
+    public static function getParams()
+    {
+        return self::$params;
+    }
+
+    /**
+     * Set the value of params
+     *
+     * @return  self
+     */ 
+    public static function setParams(propertysInterface $params)
+    {
+        if(isset($params) && !empty($params)){
+            if(!isset(self::$params)){
+                self::$params = $params;
+                return;
+            }
+            self::getParams()->add((array) $params);
         }
     }
 }
