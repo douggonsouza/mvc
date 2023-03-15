@@ -18,9 +18,9 @@ class controllers extends screens implements controllersInterface
      *
      * @return void
      */
-    public function __construct(
-        string $page = null, 
-        string $layout = null
+    public function __construct( 
+        string $layout = null,
+        string $page = null
     )
     {
         self::setBenchmarck(router::getBenchmarck());
