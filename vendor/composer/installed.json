@@ -2,20 +2,20 @@
     "packages": [
         {
             "name": "douggonsouza/propertys",
-            "version": "v1.0.4",
-            "version_normalized": "1.0.4.0",
+            "version": "v1.0.5",
+            "version_normalized": "1.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/douggonsouza/propertys.git",
-                "reference": "ebd7471bf7279f2e2520c6b7eadfcf6171ab47cf"
+                "reference": "c3199eea7030e6b867e58e87b438c669f25256a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/douggonsouza/propertys/zipball/ebd7471bf7279f2e2520c6b7eadfcf6171ab47cf",
-                "reference": "ebd7471bf7279f2e2520c6b7eadfcf6171ab47cf",
+                "url": "https://api.github.com/repos/douggonsouza/propertys/zipball/c3199eea7030e6b867e58e87b438c669f25256a3",
+                "reference": "c3199eea7030e6b867e58e87b438c669f25256a3",
                 "shasum": ""
             },
-            "time": "2022-09-16T23:56:11+00:00",
+            "time": "2023-03-18T16:53:12+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -36,7 +36,7 @@
             "description": "Armazenagem das propriedades",
             "support": {
                 "issues": "https://github.com/douggonsouza/propertys/issues",
-                "source": "https://github.com/douggonsouza/propertys/tree/v1.0.4"
+                "source": "https://github.com/douggonsouza/propertys/tree/v1.0.5"
             },
             "install-path": "../douggonsouza/propertys"
         }

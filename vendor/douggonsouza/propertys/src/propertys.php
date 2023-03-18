@@ -92,5 +92,16 @@ class propertys extends stdClass implements propertysInterface
     {
         return serialize($this);
     }
+    
+    /**
+     * Method exist
+     *
+     * @return void
+     */
+    public function exist()
+    {
+        $propertys = get_object_vars($this);
+        return isset($propertys) && !empty($propertys)? true: false;
+    }
 }
 ?>
