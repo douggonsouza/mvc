@@ -2,9 +2,7 @@
 
 namespace douggonsouza\mvc\model;
 
-use douggonsouza\mvc\model\connection\conn;
 use douggonsouza\mvc\model\resource\source;
-use douggonsouza\mvc\model\resource\sourceInterface;
 
 /**
  * helps
@@ -85,7 +83,7 @@ class helps
     }
 
     /**
-     * Method infoColumns - Colhe as informações para as colunas da tabela
+     * Method infoColumns - Colhe as informações das colunas da tabela
      *
      * @param string $table [explicite description]
      * @param $field $field [explicite description]
@@ -110,7 +108,7 @@ class helps
         }
 
         // devolve array
-        $source   = new source(conn::select($sql));
+        $source   = new source($sql);
         $allArray = $source->allArray();
         $source->close();
         return $allArray;
@@ -158,7 +156,15 @@ class helps
             implode(' AND ', $where)
         );
     }
-
+    
+    /**
+     * Method dataByColumns
+     *
+     * @param array $infoColumns [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return void
+     */
     protected function dataByColumns(array $infoColumns, array $data)
     {
         $content = array();
@@ -176,7 +182,15 @@ class helps
 
         return $content;
     }
-
+    
+    /**
+     * Method filterByColumns
+     *
+     * @param string $table [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return void
+     */
     protected function filterByColumns(string $table, array $data)
     {
         $content = array();

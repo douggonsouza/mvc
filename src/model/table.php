@@ -85,6 +85,19 @@ class table extends helps implements tableInterface
     }
 
     /**
+     * Exist dados no recurso
+     * @return int
+    */
+    public function exist()
+    {
+        if(empty($this->getSource())){
+            throw new \Exception("Não existe recurso.");
+        }
+
+        return $this->getSource()->exist();
+    }
+
+    /**
      * Informações das colunas visíveis
      *
      * array(
@@ -140,7 +153,7 @@ class table extends helps implements tableInterface
             $lWhere
         );
 
-        return (new source(conn::select($sql)))->allArray();
+        return (new source($sql))->allArray();
     }
 
     /**
@@ -240,6 +253,10 @@ class table extends helps implements tableInterface
      */
     public function get(string $name)
     {
+        if(empty($this->getData())){
+            return null;
+        }
+
         return $this->getData()->$name;
     }
 
@@ -253,6 +270,10 @@ class table extends helps implements tableInterface
      */
     public function set(string $name, $value)
     {
+        if(empty($this->getData())){
+            return null;
+        }
+
         $this->getData()->add(array($name => $value));
 
         return true;
@@ -288,7 +309,7 @@ class table extends helps implements tableInterface
     //         return conn::select($sql);
     //     }
 
-    //     return conn::selectAsArray($sql);
+    //     return (new source($sql))->allArray();
     // }
 
     /**
@@ -452,7 +473,7 @@ class table extends helps implements tableInterface
             implode(' AND ', $content)
         );
 
-        $this->setSource(new source(conn::select($sql)));
+        $this->setSource(new source($sql));
         if (!empty(conn::getError())) {
             $this->setError(conn::getError());
             return false;

@@ -3,6 +3,7 @@
 namespace douggonsouza\mvc\model\resource;
 
 use douggonsouza\mvc\model\resource\sourceInterface;
+use douggonsouza\mvc\model\connection\conn;
 
 /**
  * source
@@ -24,9 +25,11 @@ class source implements sourceInterface
      *
      * @return void
      */
-    public function __construct(\mysqli_result $resource = null)
+    public function __construct(string $sql)
     {
-        $this->setResource($resource);
+        if(isset($sql) && !empty($sql)){
+            $this->setResource(conn::select($sql));
+        }
     }
     
     /**
