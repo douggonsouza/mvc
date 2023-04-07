@@ -45,7 +45,7 @@ abstract class screens implements screensInterface
                 ${$index} = $value;
             }
         }
-
+        
         return include($local);
 	}
                
@@ -246,7 +246,7 @@ abstract class screens implements screensInterface
     /**
      * Get the value of benchmarck
      */ 
-    public function getBenchmarck()
+    public static function getBenchmarck()
     {
         return self::$benchmarck;
     }

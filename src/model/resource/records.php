@@ -3,6 +3,7 @@
 namespace douggonsouza\mvc\model\resource;
 
 use douggonsouza\mvc\model\resource\recordsInterface;
+use douggonsouza\mvc\model\connection\conn;
 
 class records implements recordsInterface
 {

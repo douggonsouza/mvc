@@ -23,9 +23,9 @@ class controllers extends screens implements controllersInterface
         string $page = null
     )
     {
-        self::setBenchmarck(router::getBenchmarck());
         self::setPage($page);
         self::setLayout($layout);
+        self::setBenchmarck(router::getBenchmarck());
         self::setInfos(router::getInfos());
         self::setAutenticate(router::getAutenticate());
     }
@@ -38,7 +38,7 @@ class controllers extends screens implements controllersInterface
      */
     public function main(propertysInterface $infos = null)
     {
-        return self::view('', $infos);
+        return views::view(null, $infos);
     }
     
     /**

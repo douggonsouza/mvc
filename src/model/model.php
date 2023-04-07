@@ -362,13 +362,7 @@ class model extends utils implements modelInterface
      */
     public function save()
     {
-        if(empty($this->getRecords())){
-            return false;
-        }
-
-        $records = new records();
-
-        $this->validated($this->getData());
+        // $this->validated($this->getData());
 
         $sql = $this->queryForSave($this->getData());
         if(empty($sql)){
@@ -376,19 +370,14 @@ class model extends utils implements modelInterface
             return false;
         }
 
-        if(!empty($this->getError())){
+        $id = conn::query($sql);
+        if(is_bool($id) && !$id){
+            $this->setError(conn::getError());
             return false;
         }
 
-        if(!$this->beforeSave()){
-            $this->setError('Erro na validação de pré salvamento.');
-            return false;
-        }
-
-        if(!$records->query($sql)){
-            $this->setError($records->getError());
-            return false;
-        }
+        $this->search(array($this->key => $id));
+        $this->setNew(false);
 
         return true;
     }

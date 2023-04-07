@@ -16,7 +16,7 @@ abstract class conn implements connInterface
 
 	public static $error;
 
-	private static $connection  = null;
+	private static $connection = null;
 
 	private function __construct(){	}
 	
@@ -31,10 +31,10 @@ abstract class conn implements connInterface
 	 */
 	public static function connection(string $host, string $login, string $password, string $schema)
 	{
-		self::$host  = $host;
-		self::$login = $login;
+		self::$host     = $host;
+		self::$login    = $login;
 		self::$password = $password;
-		self::$schema = $schema;
+		self::$schema   = $schema;
 
         if(!isset(self::$connection)){
 			self::$connection = mysqli_connect(
@@ -47,38 +47,16 @@ abstract class conn implements connInterface
 				exit(sprintf("Connect failed: %s\n", mysqli_connect_error()));
 			}
 		}
-		return self::$connection;
     }
-    	
-	/**
-	 * Evento destruidor da classe
-	 */
-	function __destruct()
-	{
-		self::$connection = null;	
-	}
 
 	/**
 	 * Get the value of conn
 	 */ 
-	static public function getConnection()
+	public static function getConnection()
 	{
 		if(!isset(self::$connection)){
-			if(!isset(self::$host) || !isset(self::$login) || !isset(self::$password) || !isset(self::$schema)){
-				self::setError("Não existem dados de conexão");
-				return null;
-			}
-
-			self::connection(
-                self::getHost(),
-                self::getLogin(),
-                self::getPassword(),
-                self::getSchema(),
-            );
-            if(!isset(self::$connection)){
-                self::setError('Erro durante a conexão.');
-                return null;
-            }
+			self::setError("Não existem dados de conexão");
+			return null;
 		}
 
 		return self::$connection;
@@ -89,7 +67,7 @@ abstract class conn implements connInterface
      *
      * @param string $sql [explicite description]
      *
-     * @return recordsInterface
+     * @return object
      */
     public static function select(string $sql)
     {
@@ -114,48 +92,7 @@ abstract class conn implements connInterface
 				return null;
 			}
 
-			$records = new records($resource);
-			$records->data();
-
-            return $records;
-        }
-        catch(\Exception $e){
-			self::setError( $e->getMessage());
-            return false;
-        }
-    }
-  
-    /**
-     * Method selectWithArray
-     *
-     * @param string $sql [explicite description]
-     *
-     * @return void
-     */
-    public static function selectAsArray(string $sql)
-    {
-        if(!isset($sql) || empty($sql) || !self::getConnection()){
-            return false;
-        }
-        
-        try{
-            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
-
-            $resource = mysqli_query(self::getConnection(), (string) $sql);
-            
-            if(!empty(mysqli_error(self::getConnection()))){
-                self::setError(mysqli_error(self::getConnection()));
-                return false;
-            }
-
-            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
-
-			if(is_bool($resource)){
-				self::setError('Não trata-se de um recurso.');
-				return null;
-			}
-
-            return mysqli_fetch_all($resource, MYSQLI_ASSOC);
+            return $resource;
         }
         catch(\Exception $e){
 			self::setError( $e->getMessage());
@@ -172,6 +109,8 @@ abstract class conn implements connInterface
      */
     public static function query(string $sql)
     {
+		$result = false;
+
         if(!isset($sql) || empty($sql) || !self::getConnection()){
             return false;
         }
@@ -179,26 +118,64 @@ abstract class conn implements connInterface
         try{
             mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 0;');
 
-            $resource = mysqli_query(self::getConnection(), (string) $sql);
-            
+            $result = mysqli_query(self::getConnection(), (string) $sql);
+
             if(!empty(mysqli_error(self::getConnection()))){
                 self::setError(mysqli_error(self::getConnection()));
                 return false;
             }
-
-            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
-
-			if(!is_bool($resource)){
-				return null;
+				
+			if(!is_bool($result)){
+				mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
+				return false;
 			}
 
-            return $resource;
+			$resource = mysqli_query(self::getConnection(), 'Select LAST_INSERT_ID() FROM DUAL;');
+            mysqli_query(self::getConnection(), 'SET SQL_SAFE_UPDATES = 1;');
+
+			$insertId = (mysqli_fetch_all($resource))[0][0];
+			if(!isset($insertId) || empty($insertId)){
+				return true;
+			}
+
+			$resource->close();
+            return $insertId;
         }
         catch(\Exception $e){
 			self::setError( $e->getMessage());
             return false;
         }
     }
+	
+	/**
+	 * Method affecteds
+	 *
+	 * @param $resource $resource [explicite description]
+	 *
+	 * @return object
+	 */
+	public function affecteds()
+    {
+		if(!self::getConnection()){
+            throw new \Exception("Não existe conexção ativa.");
+        }
+
+        return mysqli_affected_rows(self::getConnection());
+    }
+	
+	/**
+	 * Method close
+	 *
+	 * @return object
+	 */
+	public function close()
+	{
+		if(!self::getConnection()){
+            throw new \Exception("Não existe conexção ativa.");
+        }
+
+		return mysqli_close(self::getConnection());
+	}
 
 	/**
      * Inicia transação
@@ -289,7 +266,7 @@ abstract class conn implements connInterface
 	 *
 	 * @return  self
 	 */ 
-	public static function setError(string $error)
+	protected static function setError(string $error)
 	{
 		if(isset($error) && !empty($error)){
 			self::$error = $error;
