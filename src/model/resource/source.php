@@ -37,10 +37,14 @@ class source implements sourceInterface
      *
      * @return void
      */
-    public function close()
+    public function close($return = null)
     {
         if(empty($this->getResource())){
             throw new \Exception("Não existe recurso.");
+        }
+
+        if(isset($return) && !empty($return)){
+            return $return;
         }
 
         return $this->getResource()->close();

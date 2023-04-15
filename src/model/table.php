@@ -58,6 +58,9 @@ class table extends helps implements tableInterface
                 $this->search($id);
             }
         }
+
+        // info das colunas
+        $this->setColumns($this->infoColumns($this->getTable()));
     }
     
     /**
@@ -98,28 +101,6 @@ class table extends helps implements tableInterface
     }
 
     /**
-     * Informações das colunas visíveis
-     *
-     * array(
-     *      'table'  => 'users',
-     *      'key'    => 'user_id',
-     *      'columns' => array(
-     *              'user_id' => array(
-     *              'label' => 'Id',
-     *              'pk'    => true,
-     *              'type'  => 'integer',
-     *              'limit' => 11
-     *          ),
-     *      ),
-     * );
-     * @return void
-     */
-    public function visibleColumns()
-    {
-        return array();
-    }
-
-    /**
      * Arvore de validações por coluna
      *
      * @return array
@@ -153,7 +134,8 @@ class table extends helps implements tableInterface
             $lWhere
         );
 
-        return (new source($sql))->allArray();
+        $source = new source($sql);
+        return $source->close($source->allArray());
     }
 
     /**
@@ -329,8 +311,13 @@ class table extends helps implements tableInterface
             $this->setData(new propertys());
         }
 
+        // info das colunas
+        if(!isset($this->columns)){
+            $this->setColumns($this->infoColumns($this->getTable()));
+        }
+
         // array do conteúdo
-        $content = $this->dataByColumns($this->infoColumns($this->getTable()), $data);
+        $content = $this->dataByColumns($this->getColumns(), $data);
         if (!$this->getData()->add($content)) {
             $this->setError('Erro na população do objeto Data.');
             return false;
@@ -348,7 +335,11 @@ class table extends helps implements tableInterface
     {
         // $this->validated($this->getData());
 
-        $sql = $this->queryForSave((array) $this->getData());
+        $sql = $this->queryForSave(
+            (array) $this->getData(), 
+            $this->getTable(), 
+            $this->isNew()
+        );
         if (empty($sql)) {
             $this->setError('Erro na geração da query de salvamento.');
             return false;
@@ -404,7 +395,11 @@ class table extends helps implements tableInterface
             return false;
         }
 
-        $sql = $this->queryForDelete((array) $this->getData());
+        $sql = $this->queryForDelete(
+            (array) $this->getData(), 
+            $this->getTable(), 
+            $this->getKey()
+        );
         if (empty($sql)) {
             $this->setError('Erro na geração da query de deleção.');
             return false;
@@ -429,7 +424,12 @@ class table extends helps implements tableInterface
             return false;
         }
 
-        $sql = $this->queryForSoftDelete((array) $this->getData(), $removed);
+        $sql = $this->queryForSoftDelete(
+            (array) $this->getData(), 
+            $this->getTable(), 
+            $this->getKey(), 
+            $removed
+        );
         if (empty($sql)) {
             $this->setError('Erro na geração da query de deleção.');
             return false;
@@ -460,6 +460,11 @@ class table extends helps implements tableInterface
         if (!isset($search) || empty($search)) {
             $this->setError('Não é permitido parâmetro nulo.');
             return false;
+        }
+
+        // info das colunas
+        if(!isset($this->columns)){
+            $this->setColumns($this->infoColumns($this->getTable()));
         }
 
         $content = $this->prepareArrayWhere($this->getTable(), $search);
@@ -496,200 +501,6 @@ class table extends helps implements tableInterface
     public function isNew()
     {
         return $this->getNew();
-    }
-
-    /**
-     * Cria query de Save
-     *
-     * @param array $infoColumns
-     * @param array $data
-     * @return string
-     */
-    public function queryForSave(array $data)
-    {
-        if (!isset($data) || empty($data)) {
-            $this->setError('Não é permitido parâmetro data nulo.');
-            return false;
-        }
-
-        $infoColumns = $this->infoColumns($this->getTable());
-        if (!isset($infoColumns) || empty($infoColumns)) {
-            $this->setError('Não é permitido parâmetro infoColumns nulo.');
-            return false;
-        }
-
-        $where = null;
-
-        // array do conteúdo
-
-        $content = array();
-        foreach ($infoColumns as $item) {
-            if ($item['Key'] == 'PRI') {
-                if (isset($data[$item['Field']])) {
-                    $where = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                        $this->type($item['Type']),
-                        $data[$item['Field']]
-                    );
-                }
-                continue;
-            }
-
-            if (isset($where)) {
-                $content[$item['Field']] = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                    $this->type($item['Type']),
-                    $data[$item['Field']]
-                ) . '';
-                continue;
-            }
-
-            // active
-            if (isset($item['Field']) && $item['Field'] == 'active') {
-                if (isset($data[$item['Field']])) {
-                    $content[$item['Field']] = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                        $this->type($item['Type']),
-                        $data[$item['Field']]
-                    ) . '';
-                }
-                continue;
-            }
-            // created
-            if (isset($item['Field']) && $item['Field'] == 'created') {
-                $content[$item['Field']] = 'NOW()';
-                if (isset($data[$item['Field']])) {
-                    $content[$item['Field']] = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                        $this->type($item['Type']),
-                        $data[$item['Field']]
-                    ) . '';
-                }
-                continue;
-            }
-            // modified
-            if (isset($item['Field']) && $item['Field'] == 'modified') {
-                $content[$item['Field']] = 'NOW()';
-                if (isset($data[$item['Field']])) {
-                    $content[$item['Field']] = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                        $this->type($item['Type']),
-                        $data[$item['Field']]
-                    ) . '';
-                }
-                continue;
-            }
-            // removed
-            if (isset($item['Field']) && $item['Field'] == 'removed') {
-                if (isset($data[$item['Field']])) {
-                    $content[$item['Field']] = $item['Field'] . ' = ' . $this->prepareValueByColumns(
-                        $this->type($item['Type']),
-                        $data[$item['Field']]
-                    ) . '';
-                }
-                continue;
-            }
-
-            $content[$item['Field']] = $this->prepareValueByColumns(
-                $this->type($item['Type']),
-                $data[$item['Field']]
-            );
-        }
-
-        // update
-        if (isset($where)) {
-            $sql = sprintf(
-                "UPDATE %1\$s SET %2\$s WHERE %3\$s;",
-                $this->getTable(),
-                implode(', ', $content),
-                $where
-            );
-            return $sql;
-        }
-        // save
-        $sql = sprintf(
-            "INSERT INTO %1\$s (%2\$s) VALUES (%3\$s);",
-            $this->getTable(),
-            implode(', ', array_keys($content)),
-            implode(', ', $content),
-        );
-        return $sql;
-    }
-
-    /**
-     * Cria query de Deleção
-     *
-     * @param array $data
-     * @return string
-     */
-    public function queryForDelete(array $data)
-    {
-        if (!isset($data) || empty($data)) {
-            $this->setError('Nâo é permitido parâmetro data nulo.');
-            return false;
-        }
-
-        $infoColumns = $this->infoColumns($this->getTable());
-        if (!isset($infoColumns) || empty($infoColumns)) {
-            $this->setError('Não é permitido parâmetro infoColumns nulo.');
-            return false;
-        }
-
-        // existe id
-        $where = null;
-        $infoKey = $this->infoColumns($this->getTable(), $this->getKey());
-        if (isset($data[$infoKey['Field']])) {
-            $where = $infoKey['Field'] . ' = ' . $this->prepareValueByColumns(
-                $this->type($infoKey['Type']),
-                $data[$infoKey['Field']]
-            );
-        }
-        if (!isset($where)) {
-            $this->setError('Não é possível deletar um novo records.');
-            return false;
-        }
-
-        // update
-        $sql = sprintf(
-            "DELETE FROM %1\$s WHERE %2\$s;",
-            $this->getTable(),
-            $where
-        );
-        return $sql;
-    }
-
-    /**
-     * Method queryForSoftDelete - Cria query de inativação
-     *
-     * @param array $data
-     * @param int $removed
-     *
-     * @return string
-     */
-    public function queryForSoftDelete(array $data, int $removed = 1)
-    {
-        if (!isset($data) || empty($data)) {
-            $this->setError('Nâo é permitido parâmetro data nulo.');
-            return false;
-        }
-
-        // existe id
-        $where = null;
-        $infoKey = $this->infoColumns($this->getTable(), $this->getKey());
-        if (isset($data[$infoKey['Field']])) {
-            $where = $infoKey['Field'] . ' = ' . $this->prepareValueByColumns(
-                $this->type($infoKey['Type']),
-                $data[$infoKey['Field']]
-            );
-        }
-        if (!isset($where)) {
-            $this->setError('Não é possível deletar um novo records.');
-            return false;
-        }
-
-        // update
-        $sql = sprintf(
-            "UPDATE FROM %1\$s SET active='no',removed=%2\$d WHERE %3\$s;",
-            $this->getTable(),
-            $removed,
-            $where
-        );
-        return $sql;
     }
 
     /**
